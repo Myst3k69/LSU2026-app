@@ -1,0 +1,74 @@
+<!-- @dsCard group="Écrans — mobile" width=390 height=1232 page subtitle="Accueil · mobile" -->
+<!doctype html>
+<html lang="fr">
+<head><meta charset="utf-8"><title>Accueil — mobile</title>
+<style>
+  .scr { position: relative; width: 390px; background: var(--paper); overflow: hidden; }
+  .bo-proto { gap: var(--space-2); padding: 0 var(--space-3); }
+  .bo-proto .label { letter-spacing: 0.1em; font-size: 10px; }
+  .bar { display: flex; align-items: center; justify-content: space-between; height: 64px; padding: 0 var(--space-4); }
+  .bar__r { display: flex; align-items: center; gap: var(--space-3); }
+  .icbtn { display: grid; place-items: center; width: 40px; height: 40px; border-radius: var(--radius-xs); border: 1.5px solid var(--line-control); color: var(--ink); background: transparent; }
+  .user { display: grid; place-items: center; width: 36px; height: 36px; border-radius: var(--radius-full); background: var(--ink); color: var(--surface); font-weight: 700; font-size: 12px; }
+  .hero { position: relative; padding: var(--space-5) var(--space-4) 0; }
+  .kick { display: flex; align-items: center; gap: var(--space-3); color: var(--ink-3); margin-bottom: var(--space-4); }
+  .kick i { width: 28px; height: 1.5px; background: var(--ink); }
+  h1 { font-size: 48px; position: relative; z-index: 1; }
+  h1 em { font-style: normal; color: var(--bleu); }
+  .lead { margin-top: var(--space-4); color: var(--ink-2); font-size: 16px; line-height: 24px; position: relative; z-index: 1; }
+  .disc { position: absolute; width: 160px; height: 160px; border-radius: var(--radius-full); background: var(--bleu); right: -110px; top: 0; }
+  .form { padding: var(--space-5) var(--space-4) 0; display: flex; flex-direction: column; gap: var(--space-3); }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { display: inline-flex; align-items: center; gap: 4px; height: 28px; padding: 0 10px; border-radius: var(--radius-xs); background: var(--paper); color: var(--ink-2); font-size: 13px; font-weight: 600; box-shadow: inset 0 0 0 1px var(--line); }
+  .chip.on { background: var(--bleu-soft); color: var(--bleu); box-shadow: none; }
+  .note { color: var(--ink-3); text-align: center; }
+  .doms { margin: var(--space-6) var(--space-4) var(--space-6); border-top: 1.5px solid var(--ink); }
+  .doms__h { display: flex; align-items: baseline; gap: var(--space-3); padding: var(--space-4) 0 var(--space-3); }
+  .doms__h .label { color: var(--ink-3); line-height: 15px; }
+  .doms ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; }
+  .doms li { display: flex; align-items: center; gap: var(--space-2); padding: 10px 0; border-top: 1px solid var(--line); color: var(--ink); }
+  .doms li:nth-child(odd) { padding-right: var(--space-2); }
+  .doms li:nth-child(even) { padding-left: var(--space-3); border-left: 1px solid var(--line); }
+  .doms .n { font-family: var(--font-serif); font-weight: 600; color: var(--ink-3); width: 20px; }
+  .doms .f { margin-left: auto; }
+  .legend { display: flex; align-items: center; gap: var(--space-2); padding-top: var(--space-3); border-top: 1px solid var(--line); color: var(--ink-3); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var B = window.BuildOS, h = React.createElement, D = B.Demo;
+  var FORGOT = { produit: 1, juridique: 1, finance: 1, tech: 1, operations: 1 };
+  function Screen() {
+    return h('div', { className: 'scr' },
+      h(B.PrototypeBanner),
+      h('header', { className: 'bar' },
+        h(B.Logo, { height: 24 }),
+        h('div', { className: 'bar__r' }, h('span', { className: 'user' }, 'CF'), h('button', { className: 'icbtn', 'aria-label': 'Menu' }, h(B.Icon, { name: 'menu', size: 20 })))),
+      h('section', { className: 'hero' },
+        h('span', { className: 'disc', 'aria-hidden': 'true' }),
+        h('div', { className: 'kick label' }, h('i'), 'Nouveau projet · étape 1 sur 2'),
+        h('h1', { className: 'display-l' }, 'Décrivez votre idée. On en fait un ', h('em', null, 'plan.')),
+        h('p', { className: 'lead' }, 'Un plan d’action en huit domaines, avec les étapes que les fondateurs oublient le plus souvent.')),
+      h('section', { className: 'form' },
+        h(B.Input, {
+          label: 'Votre projet en quelques phrases', multiline: true, rows: 7, defaultValue: D.project.description,
+          footer: h('div', { className: 'chips' },
+            h('span', { className: 'chip on' }, h(B.Icon, { name: 'check', size: 14, strokeWidth: 2.25 }), 'Ville'),
+            h('span', { className: 'chip on' }, h(B.Icon, { name: 'check', size: 14, strokeWidth: 2.25 }), 'Cible'),
+            h('span', { className: 'chip on' }, h(B.Icon, { name: 'check', size: 14, strokeWidth: 2.25 }), 'Revenus'),
+            h('span', { className: 'chip' }, h(B.Icon, { name: 'plus', size: 14 }), 'Budget'))
+        }),
+        h(B.Button, { variant: 'primary', size: 'lg', block: true, icon: 'arrow-right' }, 'Générer mon plan'),
+        h('p', { className: 'note body-s' }, 'Environ 30 secondes · modifiable ensuite')),
+      h('section', { className: 'doms' },
+        h('div', { className: 'doms__h' }, h('span', { className: 'numeral-s' }, '08'), h('span', { className: 'label' }, 'Domaines couverts', h('br'), 'par votre plan')),
+        h('ul', { className: 'body-s' }, D.domains.map(function (d) {
+          return h('li', { key: d.id }, h('span', { className: 'n' }, d.index), h('span', null, d.name), FORGOT[d.id] ? h(B.ForgottenBadge, { compact: true, className: 'f' }) : null);
+        })),
+        h('p', { className: 'legend body-s' }, h(B.ForgottenBadge, { compact: true }), 'Domaine où les fondateurs oublient souvent une étape')));
+  }
+  ReactDOM.createRoot(document.getElementById('root')).render(h(Screen));
+</script>
+</body>
+</html>

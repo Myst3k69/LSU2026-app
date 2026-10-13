@@ -1,0 +1,103 @@
+<!-- @dsCard group="Écrans — desktop" width=1440 height=960 page subtitle="Accueil · saisie du projet" -->
+<!doctype html>
+<html lang="fr">
+<head><meta charset="utf-8"><title>Accueil — desktop</title>
+<style>
+  html, body { height: 100%; }
+  body { overflow: hidden; }
+  .scr { position: relative; width: 1440px; height: 960px; overflow: hidden; background: var(--paper); }
+  .nav { display: flex; align-items: center; gap: var(--space-5); height: 88px; padding: 0 var(--space-8); }
+  .nav__sep { width: 1px; height: 32px; background: var(--ink); opacity: .5; }
+  .nav__tag { color: var(--ink-3); line-height: 15px; }
+  .nav__links { display: flex; gap: var(--space-6); margin-left: auto; color: var(--ink); }
+  .nav__links a { color: inherit; text-decoration: none; }
+  .nav__right { display: flex; align-items: center; gap: var(--space-4); margin-left: var(--space-7); }
+  .nav__user { display: grid; place-items: center; width: 40px; height: 40px; border-radius: var(--radius-full); background: var(--ink); color: var(--surface); font-weight: 700; font-size: 13px; }
+  .hero { position: relative; display: grid; grid-template-columns: 640px 1fr; gap: var(--space-8); padding: var(--space-7) var(--space-8) 0; height: 600px; }
+  .kick { display: flex; align-items: flex-start; gap: var(--space-4); margin-bottom: var(--space-5); color: var(--ink-3); }
+  .kick__line { width: 40px; height: 1.5px; background: var(--ink); margin-top: 7px; }
+  .hero h1 { color: var(--ink); }
+  .hero h1 em { font-style: normal; color: var(--bleu); }
+  .hero .lead { margin-top: var(--space-6); max-width: 540px; color: var(--ink-2); }
+  .proof { display: flex; align-items: center; gap: var(--space-4); margin-top: var(--space-6); padding-top: var(--space-5); border-top: 1px solid var(--line); max-width: 540px; }
+  .proof__q { color: var(--ink-2); }
+  .right { position: relative; z-index: 1; padding-top: var(--space-2); }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); box-shadow: var(--shadow-frame); padding: var(--space-5); }
+  .card__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-4); }
+  .card__head .label { color: var(--ink-3); }
+  .chips { display: flex; flex-wrap: wrap; gap: var(--space-2); flex: 1; }
+  .chip { display: inline-flex; align-items: center; gap: 4px; height: 28px; padding: 0 10px; border-radius: var(--radius-xs); background: var(--paper); color: var(--ink-2); font-size: 13px; font-weight: 600; box-shadow: inset 0 0 0 1px var(--line); }
+  .chip.on { background: var(--bleu-soft); color: var(--bleu); box-shadow: none; }
+  .card__go { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); margin-top: var(--space-5); }
+  .card__go .body-s { color: var(--ink-3); max-width: 300px; }
+  .try { margin-top: var(--space-5); display: flex; gap: var(--space-3); align-items: baseline; color: var(--ink-2); }
+  .try .label { color: var(--ink-3); flex: none; }
+  .disc { position: absolute; border-radius: var(--radius-full); background: var(--bleu); }
+  .disc--a { width: 320px; height: 320px; right: -168px; top: 236px; }
+  .band { position: absolute; left: 0; right: 0; bottom: 0; height: 224px; display: grid; grid-template-columns: 248px repeat(8, 1fr); border-top: 1.5px solid var(--ink); background: var(--paper); }
+  .band__intro { padding: var(--space-5) var(--space-5) 0 var(--space-8); display: flex; flex-direction: column; gap: var(--space-3); }
+  .band__intro .label { color: var(--ink-3); line-height: 16px; }
+  .dom { padding: var(--space-5) var(--space-4) 0; border-left: 1px solid var(--line); display: flex; flex-direction: column; gap: var(--space-2); }
+  .dom .bo-icon { color: var(--ink); margin-bottom: var(--space-2); }
+  .dom__n { font-family: var(--font-serif); font-weight: 600; font-size: 15px; color: var(--ink-3); }
+  .dom__ex { color: var(--ink-3); }
+  .dom__ex b { color: var(--orange-ink); font-weight: 600; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var B = window.BuildOS, h = React.createElement, D = B.Demo;
+  var EX = {
+    produit: 'Parcours, MVP, <b>annulations</b>', marche: 'Entretiens, taille du marché, prix', juridique: 'Statut, <b>CGU</b>, <b>marque</b>, <b>RGPD</b>',
+    finance: 'Prévisionnel, commission, <b>TVA</b>', marketing: 'Liste d’attente, partenariats', tech: 'Paiement, créneaux, <b>hébergement</b>',
+    operations: '<b>Assurance</b>, <b>litiges</b>, onboarding', veille: 'Aides publiques, concurrence'
+  };
+  function Screen() {
+    return h('div', { className: 'scr' },
+      h(B.PrototypeBanner),
+      h('header', { className: 'nav' },
+        h(B.Logo, { height: 32 }),
+        h('span', { className: 'nav__sep' }),
+        h('span', { className: 'nav__tag label' }, 'De l’idée', h('br'), 'au plan d’action'),
+        h('nav', { className: 'nav__links ui' }, h('a', { href: '#' }, 'Mes projets'), h('a', { href: '#' }, 'Méthode'), h('a', { href: '#' }, 'Ressources')),
+        h('div', { className: 'nav__right' }, h(B.Button, { variant: 'secondary', size: 'sm', iconLeft: 'list' }, 'Plan de Créno Vélo'), h('span', { className: 'nav__user' }, 'CF'))),
+      h('section', { className: 'hero' },
+        h('div', null,
+          h('div', { className: 'kick label' }, h('span', { className: 'kick__line' }), h('span', null, 'Nouveau projet', h('br'), 'Étape 1 sur 2')),
+          h('h1', { className: 'display-xl' }, 'Décrivez votre idée. On en fait un ', h('em', null, 'plan.')),
+          h('p', { className: 'lead body-l' }, 'BuildOS lit votre description et prépare un plan d’action complet en huit domaines, avec les étapes que les fondateurs oublient le plus souvent.'),
+          h('div', { className: 'proof' },
+            h(B.ForgottenBadge, null, 'Étapes souvent oubliées incluses'),
+            h('span', { className: 'proof__q body-s' }, 'Signalées dans le plan dès sa création.'))),
+        h('div', { className: 'right' },
+          h('div', { className: 'card' },
+            h('div', { className: 'card__head' }, h('span', { className: 'label' }, 'Votre projet en quelques phrases'), h('span', { className: 'body-s', style: { color: 'var(--ink-3)' } }, 'Brouillon enregistré')),
+            h(B.Input, {
+              multiline: true, size: 'lg', rows: 6, 'aria-label': 'Description du projet', defaultValue: D.project.description,
+              footer: h('div', { className: 'chips' },
+                h('span', { className: 'chip on' }, h(B.Icon, { name: 'check', size: 14, strokeWidth: 2.25 }), 'Ville'),
+                h('span', { className: 'chip on' }, h(B.Icon, { name: 'check', size: 14, strokeWidth: 2.25 }), 'Cible'),
+                h('span', { className: 'chip on' }, h(B.Icon, { name: 'check', size: 14, strokeWidth: 2.25 }), 'Modèle de revenus'),
+                h('span', { className: 'chip' }, h(B.Icon, { name: 'plus', size: 14 }), 'Budget'),
+                h('span', { className: 'chip' }, h(B.Icon, { name: 'plus', size: 14 }), 'Équipe'))
+            }),
+            h('div', { className: 'card__go' },
+              h('span', { className: 'body-s' }, 'Ajoutez votre budget et votre équipe pour un plan plus précis. Environ 30 secondes.'),
+              h(B.Button, { variant: 'primary', size: 'lg', icon: 'arrow-right' }, 'Générer mon plan'))),
+          h('p', { className: 'try' }, h('span', { className: 'label' }, 'Ou essayez'), h('span', { className: 'quote-serif' }, '« Une box de produits fermiers livrée chaque semaine aux salariés de bureaux nantais »')))),
+      h('span', { className: 'disc disc--a', 'aria-hidden': 'true' }),
+      h('section', { className: 'band' },
+        h('div', { className: 'band__intro' }, h('span', { className: 'numeral' }, '08'), h('span', { className: 'label' }, 'Domaines', h('br'), 'couverts par', h('br'), 'votre plan')),
+        D.domains.map(function (d) {
+          return h('div', { key: d.id, className: 'dom' },
+            h(B.Icon, { name: d.icon, size: 24 }),
+            h('span', { className: 'dom__n' }, d.index),
+            h('strong', { className: 'title-s' }, d.name),
+            h('span', { className: 'dom__ex body-s', dangerouslySetInnerHTML: { __html: EX[d.id] } }));
+        })));
+  }
+  ReactDOM.createRoot(document.getElementById('root')).render(h(Screen));
+</script>
+</body>
+</html>

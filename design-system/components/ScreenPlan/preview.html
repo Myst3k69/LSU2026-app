@@ -1,0 +1,92 @@
+<!-- @dsCard group="Écrans — desktop" width=1440 height=2208 page subtitle="Plan · tâches par domaine" -->
+<!doctype html>
+<html lang="fr">
+<head><meta charset="utf-8"><title>Plan — desktop</title>
+<style>
+  .scr { width: 1440px; background: var(--paper); }
+  .head { display: grid; grid-template-columns: 1fr auto; gap: var(--space-7); align-items: end; padding-bottom: var(--space-6); }
+  .head .label { color: var(--ink-3); display: block; margin-bottom: var(--space-3); }
+  .head p { margin-top: var(--space-3); max-width: 600px; color: var(--ink-2); }
+  .stats { display: flex; }
+  .stat { display: flex; flex-direction: column; gap: 6px; padding: 0 var(--space-5); border-left: 1px solid var(--line); }
+  .stat:first-child { border-left: 0; }
+  .stat b { font-size: 32px; line-height: 1; font-weight: 800; letter-spacing: -0.03em; }
+  .stat .label { color: var(--ink-3); margin: 0; }
+  .stat--forgot b { color: var(--orange-ink); }
+  .stat--done b { color: var(--vert); }
+  .global { display: grid; grid-template-columns: auto 1fr; gap: var(--space-4); align-items: center; padding-bottom: var(--space-5); }
+  .global .ui { color: var(--ink); }
+  .bar { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3) 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .tabs { display: flex; gap: 2px; padding: 3px; background: var(--paper-deep); border-radius: var(--radius-sm); }
+  .tab { display: inline-flex; align-items: center; gap: var(--space-2); height: 34px; padding: 0 var(--space-3); border-radius: 6px; color: var(--ink-2); }
+  .tab span { color: var(--ink-3); font-weight: 500; }
+  .tab.on { background: var(--surface); color: var(--ink); box-shadow: var(--shadow-card); }
+  .tab--forgot { color: var(--orange-ink); }
+  .bar__right { margin-left: auto; display: flex; align-items: center; gap: var(--space-2); color: var(--ink-3); }
+  .alert { display: grid; grid-template-columns: auto 1fr auto; gap: var(--space-4); align-items: center; margin: var(--space-5) 0 var(--space-7); padding: var(--space-4) var(--space-5); background: var(--orange-soft); border-radius: var(--radius-md); }
+  .alert__ic { display: grid; place-items: center; width: 40px; height: 40px; border-radius: var(--radius-full); background: var(--surface); color: var(--orange); }
+  .alert strong { display: block; color: var(--ink); }
+  .alert p { color: var(--ink-2); }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; column-gap: var(--space-7); row-gap: var(--space-7); align-items: start; }
+  .dom { display: flex; flex-direction: column; gap: var(--space-3); }
+  .dom .bo-domain { margin-bottom: var(--space-2); }
+  .more { display: flex; align-items: center; gap: var(--space-2); height: 40px; padding: 0 var(--space-4); border: 1px dashed var(--line-control); border-radius: var(--radius-md); color: var(--ink-3); background: transparent; }
+  .more .bo-icon { color: var(--vert); }
+  .add { display: flex; align-items: center; gap: var(--space-2); color: var(--ink-3); padding: var(--space-1) var(--space-4); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var B = window.BuildOS, h = React.createElement, D = B.Demo, S = D.stats();
+  var EXPANDED = { juridique: true };
+  function Domain(props) {
+    var d = props.d, st = D.stats(d.id), list = D.tasksOf(d.id);
+    var open = EXPANDED[d.id] ? list : list.filter(function (t) { return t.status !== 'done'; });
+    var hidden = list.length - open.length;
+    return h('section', { className: 'dom' },
+      h(B.DomainHeader, { index: d.index, name: d.name, icon: d.icon, done: st.done, total: st.total, forgotten: st.forgottenOpen }),
+      open.map(function (t) {
+        return h(B.TaskCard, { key: t.id, title: t.title, status: t.status, forgotten: t.forgotten, meta: t.meta, compact: true, selected: t.id === 't10', onClick: function () {} });
+      }),
+      hidden ? h('button', { className: 'more body-s', type: 'button' }, h(B.Icon, { name: 'check-circle', size: 16 }), hidden + ' tâche' + (hidden > 1 ? 's' : '') + ' faite' + (hidden > 1 ? 's' : '') + ' masquée' + (hidden > 1 ? 's' : ''), h(B.Icon, { name: 'chevron-down', size: 16 })) : null);
+  }
+  function Screen() {
+    return h('div', { className: 'scr' },
+      h(B.PrototypeBanner),
+      h(B.AppShell, {
+        active: 'plan',
+        crumbs: [h('span', { key: 1 }, D.project.name), h(B.Icon, { key: 2, name: 'chevron-right', size: 14 }), h('strong', { key: 3 }, 'Mon plan')],
+        actions: [h(B.Button, { key: 1, variant: 'secondary', size: 'sm', iconLeft: 'doc' }, 'Exporter'), h(B.Button, { key: 2, variant: 'primary', size: 'sm', iconLeft: 'plus' }, 'Ajouter une tâche')]
+      },
+        h('div', { className: 'head' },
+          h('div', null,
+            h('span', { className: 'label' }, 'Plan de lancement · généré le 28 sept., mis à jour aujourd’hui'),
+            h('h1', { className: 'title-xl' }, 'Plan de lancement'),
+            h('p', { className: 'body' }, D.project.pitch)),
+          h('div', { className: 'stats' },
+            h('div', { className: 'stat' }, h('b', null, S.total), h('span', { className: 'label' }, 'Tâches')),
+            h('div', { className: 'stat stat--done' }, h('b', null, S.done), h('span', { className: 'label' }, 'Faites')),
+            h('div', { className: 'stat' }, h('b', null, S.postponed), h('span', { className: 'label' }, 'Reportées')),
+            h('div', { className: 'stat stat--forgot' }, h('b', null, S.forgottenOpen), h('span', { className: 'label' }, 'Oubliées ouvertes')))),
+        h('div', { className: 'global' }, h('span', { className: 'ui' }, S.pct + ' % du plan accompli'), h(B.ProgressBar, { value: S.done, max: S.total, label: 'Avancement global' })),
+        h('div', { className: 'bar' },
+          h('div', { className: 'tabs ui', role: 'tablist' },
+            h('span', { className: 'tab on', role: 'tab', 'aria-selected': 'true' }, 'Toutes ', h('span', null, S.total)),
+            h('span', { className: 'tab', role: 'tab' }, 'À faire ', h('span', null, S.todo)),
+            h('span', { className: 'tab', role: 'tab' }, 'Faites ', h('span', null, S.done)),
+            h('span', { className: 'tab', role: 'tab' }, 'Reportées ', h('span', null, S.postponed)),
+            h('span', { className: 'tab tab--forgot', role: 'tab' }, h(B.Icon, { name: 'alert', size: 14, strokeWidth: 2 }), 'Souvent oubliées ', h('span', null, S.forgotten))),
+          h('div', { className: 'bar__right body-s' }, 'Regroupées par domaine', h(B.Icon, { name: 'chevron-down', size: 16 }))),
+        h('div', { className: 'alert' },
+          h('span', { className: 'alert__ic' }, h(B.Icon, { name: 'alert', size: 20, strokeWidth: 2 })),
+          h('div', null,
+            h('strong', { className: 'title-s' }, S.forgottenOpen + ' étapes souvent oubliées sont encore ouvertes'),
+            h('p', { className: 'body-s' }, 'CGU et CGV, assurance RC professionnelle, TVA sur les commissions… Ce sont elles qui retardent le plus souvent une ouverture des réservations.')),
+          h(B.Button, { variant: 'ink', size: 'sm', icon: 'arrow-right' }, 'Les traiter en premier')),
+        h('div', { className: 'grid' }, D.domains.map(function (d) { return h(Domain, { key: d.id, d: d }); }))));
+  }
+  ReactDOM.createRoot(document.getElementById('root')).render(h(Screen));
+</script>
+</body>
+</html>

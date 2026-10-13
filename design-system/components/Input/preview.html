@@ -1,0 +1,26 @@
+<!-- @dsCard group="Saisie" height=360 subtitle="Champ simple, avec icône, zone de texte large" -->
+<!doctype html>
+<html lang="fr">
+<head><meta charset="utf-8"><title>Input</title>
+<style>.wrap{display:grid;grid-template-columns:1fr 1.3fr;gap:var(--space-5);padding:var(--space-5)}.col{display:flex;flex-direction:column;gap:var(--space-4)}.foot{display:flex;align-items:center;gap:var(--space-2);width:100%}.foot .grow{flex:1;color:var(--ink-3)}</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var B = window.BuildOS, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(
+    h('div', { className: 'wrap' },
+      h('div', { className: 'col' },
+        h(B.Input, { label: 'Nom du projet', defaultValue: 'Créno Vélo' }),
+        h(B.Input, { label: 'Ville de lancement', placeholder: 'Ex. Lyon', hint: 'Sert à proposer les organismes locaux.' }),
+        h(B.Input, { icon: 'search', placeholder: 'Rechercher une tâche…', 'aria-label': 'Rechercher une tâche' })),
+      h(B.Input, {
+        label: 'Décrivez votre projet', multiline: true, size: 'lg', rows: 5,
+        defaultValue: B.Demo.project.description,
+        footer: h('div', { className: 'foot' },
+          h('span', { className: 'grow body-s' }, '312 caractères · plus vous êtes précis, plus le plan l’est'),
+          h(B.Button, { variant: 'primary', size: 'sm', icon: 'arrow-right' }, 'Générer mon plan'))
+      })));
+</script>
+</body>
+</html>

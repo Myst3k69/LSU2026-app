@@ -1,0 +1,19 @@
+<!-- @dsCard group="Conversation" height=380 subtitle="Question de l’utilisateur, réponse du copilote avec actions" -->
+<!doctype html>
+<html lang="fr">
+<head><meta charset="utf-8"><title>ChatBubble</title>
+<style>.thread{display:flex;flex-direction:column;gap:var(--space-5);padding:var(--space-5);max-width:640px}</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var B = window.BuildOS, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(
+    h('div', { className: 'thread' },
+      h(B.ChatBubble, { from: 'user', initials: 'CF', author: 'Camille', time: '10:41' }, 'Les réparateurs doivent-ils aussi avoir leurs propres CGV ?'),
+      h(B.ChatBubble, { from: 'ai', time: '10:41', actions: [{ label: 'Générer les CGU', icon: 'doc-plus' }, { label: 'Modèle de CGV réparateur', icon: 'doc-plus' }] },
+        h('p', null, 'Oui. Chaque réparateur vend sa prestation au client : il doit l’informer de ses prix, frais de déplacement et garanties. Votre plateforme encadre la mise en relation avec des CGU.'),
+        h('p', null, 'Je vous propose deux documents distincts, à faire relire par un juriste avant la mise en ligne.'))));
+</script>
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!-- @dsCard group="Écrans — desktop" width=1440 height=1384 page subtitle="Tableau de bord · domaines, décisions, prochaines étapes" -->
+<!doctype html>
+<html lang="fr">
+<head><meta charset="utf-8"><title>Tableau de bord — desktop</title>
+<style>
+  .scr { width: 1440px; background: var(--paper); }
+  .hello { display: flex; align-items: end; justify-content: space-between; padding-bottom: var(--space-5); }
+  .hello .label { display: block; color: var(--ink-3); margin-bottom: var(--space-3); }
+  .hello em { font-style: normal; color: var(--bleu); }
+  .hello p { color: var(--ink-2); text-align: right; }
+  .row1 { display: grid; grid-template-columns: 1.05fr 1fr 0.95fr; gap: var(--space-4); }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); padding: var(--space-5); }
+  .card__h { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-4); }
+  .card__h .label { color: var(--ink-3); }
+  .card__h a { color: var(--bleu); text-decoration: none; display: inline-flex; gap: 4px; align-items: center; }
+  .big { display: flex; align-items: baseline; gap: var(--space-4); }
+  .big .display-l { color: var(--ink); }
+  .big .body-s { color: var(--ink-3); }
+  .global .bo-progress { margin: var(--space-4) 0; height: 8px; }
+  .split { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); }
+  .split div { padding: var(--space-3) 0 0; display: flex; flex-direction: column; gap: 2px; }
+  .split div + div { padding-left: var(--space-4); border-left: 1px solid var(--line); }
+  .split b { font-size: 22px; line-height: 1; font-weight: 800; letter-spacing: -0.02em; }
+  .split .label { color: var(--ink-3); }
+  .copilot { background: var(--bleu); color: var(--on-bleu); border-radius: var(--radius-lg); padding: var(--space-5); display: flex; flex-direction: column; gap: var(--space-4); }
+  .copilot__h { display: flex; align-items: center; gap: var(--space-2); }
+  .copilot .lead-serif { font-size: 22px; }
+  .sugg { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3) 0; border-top: 1px solid rgba(251, 250, 246, 0.35); }
+  .sugg span { flex: 1; }
+  .forgot { background: var(--orange-soft); border-radius: var(--radius-lg); padding: var(--space-5); display: flex; flex-direction: column; gap: var(--space-3); }
+  .forgot .big b { font-size: 56px; line-height: .9; font-weight: 800; letter-spacing: -0.04em; color: var(--orange-ink); }
+  .forgot .big span { color: var(--ink-2); }
+  .forgot ul { list-style: none; margin: 0; padding: 0; }
+  .forgot li { display: flex; gap: var(--space-2); align-items: center; padding: 8px 0; border-top: 1px solid rgba(163, 68, 10, 0.18); color: var(--ink); }
+  .due { display: flex; gap: var(--space-2); align-items: flex-start; margin-top: var(--space-5); padding: var(--space-3); border-radius: var(--radius-sm); background: var(--paper); color: var(--ink-2); }
+  .due strong { color: var(--ink); }
+  .row2 { display: grid; grid-template-columns: 1.3fr 1fr; gap: var(--space-4); margin-top: var(--space-4); }
+  .drow { display: grid; grid-template-columns: 34px 1fr 200px 44px 28px; gap: var(--space-3); align-items: center; padding: 10px 0; border-top: 1px solid var(--line); }
+  .drow:last-child { border-bottom: 1px solid var(--line); }
+  .drow .n { font-family: var(--font-serif); font-weight: 600; font-size: 20px; color: var(--ink); }
+  .drow .name { display: flex; align-items: center; gap: var(--space-2); color: var(--ink); }
+  .drow .name .bo-icon { color: var(--ink-3); }
+  .drow .cnt { text-align: right; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+  .drow .f { display: inline-flex; align-items: center; gap: 4px; color: var(--orange-ink); font-weight: 600; }
+  .dec { display: grid; grid-template-columns: 64px 1fr; gap: var(--space-4); padding: var(--space-3) 0; border-top: 1px solid var(--line); }
+  .dec__date { color: var(--ink); font-family: var(--font-serif); font-weight: 600; font-size: 17px; line-height: 22px; }
+  .dec .label { color: var(--ink-3); display: block; margin-bottom: 4px; }
+  .dec p { color: var(--ink); }
+  .next { margin-top: var(--space-6); }
+  .next__h { display: flex; align-items: baseline; gap: var(--space-4); padding-bottom: var(--space-3); margin-bottom: var(--space-4); border-bottom: 1.5px solid var(--ink); }
+  .next__h .numeral-s { color: var(--ink); }
+  .next__h .label { color: var(--ink-3); margin-left: auto; }
+  .next__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-3); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var B = window.BuildOS, h = React.createElement, D = B.Demo, S = D.stats();
+  var NEXT = ['t10', 't23', 't4', 't15'].map(function (id) { return D.tasks.filter(function (t) { return t.id === id; })[0]; });
+  var FORGOT = D.tasks.filter(function (t) { return t.forgotten && t.status !== 'done'; });
+  function Screen() {
+    return h('div', { className: 'scr' },
+      h(B.PrototypeBanner),
+      h(B.AppShell, {
+        active: 'dashboard',
+        crumbs: [h('span', { key: 1 }, D.project.name), h(B.Icon, { key: 2, name: 'chevron-right', size: 14 }), h('strong', { key: 3 }, 'Tableau de bord')],
+        actions: [h(B.Button, { key: 1, variant: 'primary', size: 'sm', icon: 'arrow-right' }, 'Ouvrir le plan')]
+      },
+        h('div', { className: 'hello' },
+          h('div', null, h('span', { className: 'label' }, 'Mardi 13 octobre · semaine 3 du plan'), h('h1', { className: 'title-xl' }, 'Bonjour Camille. Le plan ', h('em', null, 'avance.'))),
+          h('p', { className: 'body-s' }, '3 tâches faites cette semaine', h('br'), '2 décisions prises depuis lundi')),
+        h('div', { className: 'row1' },
+          h('div', { className: 'card global' },
+            h('div', { className: 'card__h' }, h('span', { className: 'label' }, 'Avancement global')),
+            h('div', { className: 'big' }, h('span', { className: 'display-l' }, S.pct + ' %'), h('span', { className: 'body-s' }, S.done + ' tâches faites', h('br'), 'sur ' + S.total)),
+            h(B.ProgressBar, { value: S.done, max: S.total, label: 'Avancement global' }),
+            h('div', { className: 'split' },
+              h('div', null, h('b', null, S.todo), h('span', { className: 'label' }, 'À faire')),
+              h('div', null, h('b', null, S.postponed), h('span', { className: 'label' }, 'Reportées')),
+              h('div', null, h('b', null, D.decisions.length), h('span', { className: 'label' }, 'Décisions'))),
+            h('div', { className: 'due body-s' }, h(B.Icon, { name: 'calendar', size: 16 }), h('span', null, 'Prochaine échéance ', h('strong', null, '20 oct.'), ' · Fixer les règles d’annulation et de retard'))),
+          h('div', { className: 'copilot' },
+            h('div', { className: 'copilot__h' }, h(B.Icon, { name: 'sparkle', size: 18 }), h('span', { className: 'label' }, 'Copilote IA · cette semaine')),
+            h('p', { className: 'lead-serif' }, 'Trois points à trancher avant vos tests utilisateurs du 24 octobre.'),
+            h('div', null,
+              h('div', { className: 'sugg body-s' }, h('span', null, 'Fixer le délai d’annulation gratuite'), h(B.Icon, { name: 'arrow-right', size: 16 })),
+              h('div', { className: 'sugg body-s' }, h('span', null, 'Choisir entre deux prestataires de paiement'), h(B.Icon, { name: 'arrow-right', size: 16 })),
+              h('div', { className: 'sugg body-s' }, h('span', null, 'Préparer le script des 5 tests maquette'), h(B.Icon, { name: 'arrow-right', size: 16 })))),
+          h('div', { className: 'forgot' },
+            h('div', { className: 'card__h', style: { marginBottom: 0 } }, h(B.ForgottenBadge, null, 'Souvent oubliées')),
+            h('div', { className: 'big' }, h('b', null, S.forgottenOpen), h('span', { className: 'body-s' }, 'encore ouvertes', h('br'), 'sur ' + S.forgotten + ' repérées')),
+            h('ul', { className: 'body-s' }, FORGOT.slice(0, 4).map(function (t) { return h('li', { key: t.id }, h(B.Icon, { name: 'circle', size: 14, strokeWidth: 2 }), t.title); })))),
+        h('div', { className: 'row2' },
+          h('div', { className: 'card' },
+            h('div', { className: 'card__h' }, h('span', { className: 'label' }, 'Avancement par domaine'), h('a', { href: '#', className: 'body-s' }, 'Voir le plan', h(B.Icon, { name: 'arrow-right', size: 14 }))),
+            D.domains.map(function (d) {
+              var s = D.stats(d.id);
+              return h('div', { key: d.id, className: 'drow' },
+                h('span', { className: 'n' }, d.index),
+                h('span', { className: 'name ui' }, h(B.Icon, { name: d.icon, size: 16 }), d.name),
+                h(B.ProgressBar, { value: s.done, max: s.total, size: 'sm', label: 'Avancement ' + d.name }),
+                h('span', { className: 'cnt body-s' }, s.done + '/' + s.total),
+                s.forgottenOpen ? h('span', { className: 'f body-s', title: s.forgottenOpen + ' souvent oubliée(s) ouverte(s)' }, h(B.Icon, { name: 'alert', size: 14, strokeWidth: 2 }), s.forgottenOpen) : h('span'));
+            })),
+          h('div', { className: 'card' },
+            h('div', { className: 'card__h' }, h('span', { className: 'label' }, 'Décisions récentes'), h('a', { href: '#', className: 'body-s' }, 'Journal complet', h(B.Icon, { name: 'arrow-right', size: 14 }))),
+            D.decisions.map(function (x, i) {
+              return h('div', { key: i, className: 'dec' }, h('span', { className: 'dec__date' }, x.date), h('div', null, h('span', { className: 'label' }, x.domain), h('p', { className: 'body' }, x.text)));
+            }))),
+        h('section', { className: 'next' },
+          h('div', { className: 'next__h' }, h('h2', { className: 'title-m' }, 'Prochaines étapes'), h('span', { className: 'label' }, 'Classées par urgence et impact')),
+          h('div', { className: 'next__grid' }, NEXT.map(function (t) {
+            return h(B.TaskCard, { key: t.id, domain: D.domain(t.d).name, title: t.title, status: t.status, forgotten: t.forgotten, meta: t.meta, onClick: function () {} });
+          })))));
+  }
+  ReactDOM.createRoot(document.getElementById('root')).render(h(Screen));
+</script>
+</body>
+</html>
