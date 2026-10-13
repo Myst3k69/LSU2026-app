@@ -1,11 +1,15 @@
 'use client';
 
 // Écran Plan (desktop), porté depuis design-system/components/ScreenPlan/preview.html.
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { B } from '@/lib/buildos';
 import { Shell } from '@/components/Shell';
-import { domains, getStats, plan, project, tasks, tasksOf, type Domain } from '@/lib/mock-data';
+import { AddTaskDialog } from '@/components/AddTaskDialog';
+import { domains, getStats, tasksOf } from '@/lib/mock-data';
 import { routes } from '@/lib/routes';
+import { useCurrentProject } from '@/lib/store';
+import type { Domain, DomainId, Task } from '@/lib/types';
 import { useScrollToDomainHash } from '@/lib/useHashTarget';
 import './ScreenPlan.css';
 
@@ -13,11 +17,18 @@ function plural(n: number, word: string) {
   return n > 1 ? `${word}s` : word;
 }
 
-function DomainSection({ d }: { d: Domain }) {
+function DomainSection({ d, tasks, expanded, selectedId, onAdd }: {
+  d: Domain;
+  tasks: Task[];
+  expanded: boolean;
+  selectedId?: string;
+  onAdd: (domainId: DomainId) => void;
+}) {
   const router = useRouter();
-  const st = getStats(d.id);
-  const list = tasksOf(d.id);
-  const open = plan.expandedDomains.includes(d.id) ? list : list.filter((t) => t.status !== 'done');
+  const [showDone, setShowDone] = useState(expanded);
+  const st = getStats(tasks, d.id);
+  const list = tasksOf(tasks, d.id);
+  const open = showDone ? list : list.filter((t) => t.status !== 'done');
   const hidden = list.length - open.length;
   return (
     <section className="dom" id={d.id}>
@@ -30,26 +41,38 @@ function DomainSection({ d }: { d: Domain }) {
           forgotten={t.forgotten}
           meta={t.meta}
           compact
-          selected={t.id === plan.highlightedTaskId}
+          selected={t.id === selectedId}
           onClick={() => router.push(routes.task(t.id))}
         />
       ))}
       {hidden ? (
-        <button className="more body-s" type="button">
+        <button className="more body-s" type="button" aria-expanded="false" onClick={() => setShowDone(true)}>
           <B.Icon name="check-circle" size={16} />
           {`${hidden} ${plural(hidden, 'tâche')} ${plural(hidden, 'faite')} ${plural(hidden, 'masquée')}`}
           <B.Icon name="chevron-down" size={16} />
         </button>
       ) : null}
+      <button className="add pm-plain body-s" type="button" onClick={() => onAdd(d.id)}>
+        <B.Icon name="plus" size={16} />Ajouter une tâche dans {d.name}
+      </button>
     </section>
   );
 }
 
 export default function ScreenPlan() {
   const router = useRouter();
-  const S = getStats();
+  const { project, tasks, plan } = useCurrentProject();
+  const [adding, setAdding] = useState<{ domainId?: DomainId } | null>(null);
+  const [addedId, setAddedId] = useState<string | null>(null);
+  const S = getStats(tasks);
   const firstForgotten = tasks.find((t) => t.forgotten && t.status !== 'done');
   useScrollToDomainHash();
+
+  function onAdded(taskId: string, domainId: DomainId) {
+    setAddedId(taskId);
+    window.requestAnimationFrame(() => document.getElementById(domainId)?.scrollIntoView({ block: 'start', behavior: 'smooth' }));
+  }
+
   return (
     <div className="s-plan">
       <B.PrototypeBanner />
@@ -58,7 +81,7 @@ export default function ScreenPlan() {
         crumbs={<><span>{project.name}</span><B.Icon name="chevron-right" size={14} /><strong>Mon plan</strong></>}
         actions={<>
           <B.Button variant="secondary" size="sm" iconLeft="doc">Exporter</B.Button>
-          <B.Button variant="primary" size="sm" iconLeft="plus">Ajouter une tâche</B.Button>
+          <B.Button variant="primary" size="sm" iconLeft="plus" onClick={() => setAdding({})}>Ajouter une tâche</B.Button>
         </>}
       >
         <div className="head">
@@ -76,7 +99,7 @@ export default function ScreenPlan() {
         </div>
         <div className="global">
           <span className="ui">{S.pct} % du plan accompli</span>
-          <B.ProgressBar value={S.done} max={S.total} label="Avancement global" />
+          <B.ProgressBar value={S.done} max={S.total || 1} label="Avancement global" />
         </div>
         <div className="bar">
           <div className="tabs ui" role="tablist">
@@ -90,25 +113,42 @@ export default function ScreenPlan() {
           </div>
           <div className="bar__right body-s">Regroupées par domaine<B.Icon name="chevron-down" size={16} /></div>
         </div>
-        <div className="alert">
-          <span className="alert__ic"><B.Icon name="alert" size={20} strokeWidth={2} /></span>
-          <div>
-            <strong className="title-s">{S.forgottenOpen} étapes souvent oubliées sont encore ouvertes</strong>
-            <p className="body-s">CGU et CGV, assurance RC professionnelle, TVA sur les commissions… Ce sont elles qui retardent le plus souvent une ouverture des réservations.</p>
+        {S.forgottenOpen ? (
+          <div className="alert">
+            <span className="alert__ic"><B.Icon name="alert" size={20} strokeWidth={2} /></span>
+            <div>
+              <strong className="title-s">
+                {S.forgottenOpen} {S.forgottenOpen > 1 ? 'étapes souvent oubliées sont encore ouvertes' : 'étape souvent oubliée est encore ouverte'}
+              </strong>
+              <p className="body-s">
+                {plan.forgottenSummary
+                  ?? `${tasks.filter((t) => t.forgotten && t.status !== 'done').slice(0, 3).map((t) => t.title).join(', ')}… Ce sont elles qui retardent le plus souvent un lancement.`}
+              </p>
+            </div>
+            <B.Button
+              variant="ink"
+              size="sm"
+              icon="arrow-right"
+              onClick={firstForgotten ? () => router.push(routes.task(firstForgotten.id)) : undefined}
+            >
+              Les traiter en premier
+            </B.Button>
           </div>
-          <B.Button
-            variant="ink"
-            size="sm"
-            icon="arrow-right"
-            onClick={firstForgotten ? () => router.push(routes.task(firstForgotten.id)) : undefined}
-          >
-            Les traiter en premier
-          </B.Button>
-        </div>
+        ) : null}
         <div className="grid">
-          {domains.map((d) => <DomainSection key={d.id} d={d} />)}
+          {domains.map((d) => (
+            <DomainSection
+              key={`${project.id}-${d.id}`}
+              d={d}
+              tasks={tasks}
+              expanded={plan.expandedDomains.includes(d.id)}
+              selectedId={addedId ?? plan.highlightedTaskId}
+              onAdd={(domainId) => setAdding({ domainId })}
+            />
+          ))}
         </div>
       </Shell>
+      <AddTaskDialog open={adding !== null} defaultDomain={adding?.domainId} onClose={() => setAdding(null)} onAdded={onAdded} />
     </div>
   );
 }

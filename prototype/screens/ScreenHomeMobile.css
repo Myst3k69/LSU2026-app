@@ -32,3 +32,5 @@
 /* Ajout prototype : chaque domaine mène à sa section du plan. */
 .s-home-m .doms li > a { display: flex; align-items: center; gap: var(--space-2); flex: 1; min-width: 0; color: inherit; text-decoration: none; }
 .s-home-m .doms li > a:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.s-home-m a.user { text-decoration: none; }
+.s-home-m a.user:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }

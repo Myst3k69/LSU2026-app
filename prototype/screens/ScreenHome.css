@@ -1,13 +1,6 @@
 /* Styles de l'écran ScreenHome, repris de design-system/components/ScreenHome/preview.html.
    Sélecteurs préfixés par .s-home pour ne pas fuir vers les autres écrans. */
 .s-home { position: relative; width: 100%; min-width: 1440px; height: 960px; overflow: hidden; background: var(--paper); }
-.s-home .nav { display: flex; align-items: center; gap: var(--space-5); height: 88px; padding: 0 var(--space-8); }
-.s-home .nav__sep { width: 1px; height: 32px; background: var(--ink); opacity: .5; }
-.s-home .nav__tag { color: var(--ink-3); line-height: 15px; }
-.s-home .nav__links { display: flex; gap: var(--space-6); margin-left: auto; color: var(--ink); }
-.s-home .nav__links a { color: inherit; text-decoration: none; }
-.s-home .nav__right { display: flex; align-items: center; gap: var(--space-4); margin-left: var(--space-7); }
-.s-home .nav__user { display: grid; place-items: center; width: 40px; height: 40px; border-radius: var(--radius-full); background: var(--ink); color: var(--surface); font-weight: 700; font-size: 13px; }
 .s-home .hero { position: relative; display: grid; grid-template-columns: 640px 1fr; gap: var(--space-8); padding: var(--space-7) var(--space-8) 0; height: 600px; }
 .s-home .kick { display: flex; align-items: flex-start; gap: var(--space-4); margin-bottom: var(--space-5); color: var(--ink-3); }
 .s-home .kick__line { width: 40px; height: 1.5px; background: var(--ink); margin-top: 7px; }

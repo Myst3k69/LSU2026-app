@@ -5,20 +5,28 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { B } from '@/lib/buildos';
 import { Shell } from '@/components/Shell';
-import {
-  dashboard, decisions, domains, founderFirstName, getDomain, getStats, getTask, project, tasks,
-  type Task,
-} from '@/lib/mock-data';
+import { domains, getDomain, getStats } from '@/lib/mock-data';
 import { routes } from '@/lib/routes';
+import { nextSteps, sendMessage, startConversation, useCurrentProject } from '@/lib/store';
 import './ScreenDashboard.css';
-
-const NEXT = dashboard.nextTaskIds.map(getTask).filter((t): t is Task => Boolean(t));
-const FORGOT = tasks.filter((t) => t.forgotten && t.status !== 'done');
 
 export default function ScreenDashboard() {
   const router = useRouter();
-  const S = getStats();
-  const deadlineTask = getTask(dashboard.nextDeadline.taskId);
+  const data = useCurrentProject();
+  const { project, tasks, decisions, dashboard } = data;
+  const S = getStats(tasks);
+  const forgot = tasks.filter((t) => t.forgotten && t.status !== 'done');
+  const next = nextSteps(data);
+  const deadlineTask = dashboard.nextDeadline && tasks.find((t) => t.id === dashboard.nextDeadline?.taskId);
+  const firstName = project.founder.split(' ')[0];
+
+  /** Une suggestion du copilote ouvre une conversation qui la pose comme question. */
+  function ask(suggestion: string) {
+    const id = startConversation();
+    void sendMessage(id, suggestion);
+    router.push(routes.conversation(id));
+  }
+
   return (
     <div className="s-dash">
       <B.PrototypeBanner />
@@ -30,7 +38,7 @@ export default function ScreenDashboard() {
         <div className="hello">
           <div>
             <span className="label">{dashboard.dateLabel}</span>
-            <h1 className="title-xl">Bonjour {founderFirstName}. Le plan <em>avance.</em></h1>
+            <h1 className="title-xl">Bonjour {firstName}. Le plan <em>avance.</em></h1>
           </div>
           <p className="body-s">
             {dashboard.weekSummary.map((line, i) => <span key={line}>{i > 0 ? <br /> : null}{line}</span>)}
@@ -41,18 +49,18 @@ export default function ScreenDashboard() {
             <div className="card__h"><span className="label">Avancement global</span></div>
             <div className="big">
               <span className="display-l">{S.pct} %</span>
-              <span className="body-s">{S.done} tâches faites<br />sur {S.total}</span>
+              <span className="body-s">{S.done} {S.done > 1 ? 'tâches faites' : 'tâche faite'}<br />sur {S.total}</span>
             </div>
-            <B.ProgressBar value={S.done} max={S.total} label="Avancement global" />
+            <B.ProgressBar value={S.done} max={S.total || 1} label="Avancement global" />
             <div className="split">
               <div><b>{S.todo}</b><span className="label">À faire</span></div>
               <div><b>{S.postponed}</b><span className="label">Reportées</span></div>
               <div><b>{decisions.length}</b><span className="label">Décisions</span></div>
             </div>
-            {deadlineTask ? (
+            {dashboard.nextDeadline && deadlineTask ? (
               <div className="due body-s">
                 <B.Icon name="calendar" size={16} />
-                <span>Prochaine échéance <strong>{dashboard.nextDeadline.date}</strong> · {deadlineTask.title}</span>
+                <span>Prochaine échéance <strong>{dashboard.nextDeadline.date}</strong> · <Link className="due__link" href={routes.task(deadlineTask.id)}>{deadlineTask.title}</Link></span>
               </div>
             ) : null}
           </div>
@@ -61,7 +69,9 @@ export default function ScreenDashboard() {
             <p className="lead-serif">{dashboard.copilot.headline}</p>
             <div>
               {dashboard.copilot.suggestions.map((s) => (
-                <div key={s} className="sugg body-s"><span>{s}</span><B.Icon name="arrow-right" size={16} /></div>
+                <button key={s} type="button" className="sugg body-s" onClick={() => ask(s)}>
+                  <span>{s}</span><B.Icon name="arrow-right" size={16} />
+                </button>
               ))}
             </div>
           </div>
@@ -69,10 +79,10 @@ export default function ScreenDashboard() {
             <div className="card__h" style={{ marginBottom: 0 }}><B.ForgottenBadge>Souvent oubliées</B.ForgottenBadge></div>
             <div className="big">
               <b>{S.forgottenOpen}</b>
-              <span className="body-s">encore ouvertes<br />sur {S.forgotten} repérées</span>
+              <span className="body-s">encore {S.forgottenOpen > 1 ? 'ouvertes' : 'ouverte'}<br />sur {S.forgotten} {S.forgotten > 1 ? 'repérées' : 'repérée'}</span>
             </div>
             <ul className="body-s">
-              {FORGOT.slice(0, 4).map((t) => (
+              {forgot.slice(0, 4).map((t) => (
                 <li key={t.id}>
                   <B.Icon name="circle" size={14} strokeWidth={2} />
                   <Link href={routes.task(t.id)}>{t.title}</Link>
@@ -88,12 +98,12 @@ export default function ScreenDashboard() {
               <Link href={routes.plan} className="body-s">Voir le plan<B.Icon name="arrow-right" size={14} /></Link>
             </div>
             {domains.map((d) => {
-              const s = getStats(d.id);
+              const s = getStats(tasks, d.id);
               return (
                 <Link key={d.id} className="drow" href={routes.domain(d.id)}>
                   <span className="n">{d.index}</span>
                   <span className="name ui"><B.Icon name={d.icon} size={16} />{d.name}</span>
-                  <B.ProgressBar value={s.done} max={s.total} size="sm" label={`Avancement ${d.name}`} />
+                  <B.ProgressBar value={s.done} max={s.total || 1} size="sm" label={`Avancement ${d.name}`} />
                   <span className="cnt body-s">{s.done}/{s.total}</span>
                   {s.forgottenOpen ? (
                     <span className="f body-s" title={`${s.forgottenOpen} souvent oubliée(s) ouverte(s)`}>
@@ -109,6 +119,7 @@ export default function ScreenDashboard() {
               <span className="label">Décisions récentes</span>
               <a href="#" className="body-s">Journal complet<B.Icon name="arrow-right" size={14} /></a>
             </div>
+            {decisions.length === 0 ? <p className="body-s" style={{ color: 'var(--ink-3)' }}>Aucune décision enregistrée pour l’instant.</p> : null}
             {decisions.map((x) => (
               <div key={x.date + x.domain} className="dec">
                 <span className="dec__date">{x.date}</span>
@@ -123,7 +134,7 @@ export default function ScreenDashboard() {
             <span className="label">Classées par urgence et impact</span>
           </div>
           <div className="next__grid">
-            {NEXT.map((t) => (
+            {next.map((t) => (
               <B.TaskCard
                 key={t.id}
                 domain={getDomain(t.domainId).name}

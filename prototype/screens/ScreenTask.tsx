@@ -2,50 +2,73 @@
 
 // Écran Détail d'une tâche (desktop), porté depuis design-system/components/ScreenTask/preview.html.
 // Seule la tâche t10 a un contenu maquetté (taskDetails) ; les autres tâches
-// reprennent le même gabarit avec leurs données de base.
+// reprennent le même gabarit avec leurs données, documents et conversation.
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { B } from '@/lib/buildos';
 import { Shell } from '@/components/Shell';
-import {
-  founderFirstName, getDomain, getTask, project, taskDetails, tasksOf,
-  type ChatMessage, type MessageBlock,
-} from '@/lib/mock-data';
+import { ChatComposer, ChatMessages } from '@/components/Chat';
+import { DocumentRow, DocumentViewer } from '@/components/Documents';
+import { getDomain, taskDetails, tasksOf } from '@/lib/mock-data';
 import { routes } from '@/lib/routes';
+import {
+  findTask, sendMessage, setTaskStatus, startConversation, switchProject, useAppState, usePendingReplies,
+} from '@/lib/store';
+import type { DocumentItem } from '@/lib/types';
 import './ScreenTask.css';
 
 const SAMPLE_TASK_ID = 't10';
 
-function Block({ block }: { block: MessageBlock }) {
-  switch (block.type) {
-    case 'text':
-      return <>{block.text}</>;
-    case 'p':
-      return <p>{block.text}</p>;
-    case 'ol':
-      return <ol>{block.items.map((item) => <li key={item}>{item}</li>)}</ol>;
-    case 'doc':
-      return (
-        <div className="gen">
-          <B.Icon name="doc" size={20} />
-          <div><strong>{block.title}</strong><span className="body-s">{block.detail}</span></div>
-        </div>
-      );
-  }
-}
-
-function Message({ m }: { m: ChatMessage }) {
-  const body = m.body.map((b, i) => <Block key={i} block={b} />);
-  return m.from === 'user'
-    ? <B.ChatBubble from="user" initials={project.founderInitials} author={founderFirstName} time={m.time}>{body}</B.ChatBubble>
-    : <B.ChatBubble from="ai" time={m.time} actions={m.actions}>{body}</B.ChatBubble>;
-}
-
 export default function ScreenTask({ taskId }: { taskId: string }) {
-  const task = getTask(taskId);
-  if (!task) return null; // la route vérifie déjà l'identifiant (404)
+  const state = useAppState();
+  const found = findTask(state, taskId);
+  const pendingReplies = usePendingReplies();
+  const [viewing, setViewing] = useState<DocumentItem | null>(null);
+
+  // Une tâche d'un autre projet rend ce projet actif.
+  useEffect(() => {
+    if (found && found.projectId !== state.currentProjectId) switchProject(found.projectId);
+  }, [found, state.currentProjectId]);
+
+  if (!found) {
+    return (
+      <div className="s-task">
+        <B.PrototypeBanner />
+        <Shell active="plan" crumbs={<><Link href={routes.plan}>Mon plan</Link><B.Icon name="chevron-right" size={14} /><strong>Tâche introuvable</strong></>}>
+          <span className="label" style={{ color: 'var(--ink-3)' }}>Tâche introuvable</span>
+          <h1 className="title title-xl" style={{ marginTop: 'var(--space-3)' }}>Cette tâche n’existe pas dans vos projets.</h1>
+          <p className="body" style={{ marginTop: 'var(--space-4)', color: 'var(--ink-2)' }}>
+            Elle a pu être créée dans un autre navigateur, ou les données de démonstration ont été réinitialisées.
+          </p>
+          <div style={{ marginTop: 'var(--space-5)' }}>
+            <Link className="pm-link ui" href={routes.plan}>Revenir au plan</Link>
+          </div>
+        </Shell>
+      </div>
+    );
+  }
+
+  const { task } = found;
+  const data = state.projects[found.projectId];
   const domain = getDomain(task.domainId);
-  const siblings = tasksOf(task.domainId);
+  const siblings = tasksOf(data.tasks, task.domainId);
   const detail = taskDetails[task.id];
+  const docs = data.documents.filter((d) => d.taskId === task.id);
+  const conversation = data.conversations.find((c) => c.taskId === task.id);
+  const typing = conversation ? pendingReplies.has(conversation.id) : false;
+
+  function send(text: string) {
+    const id = conversation?.id ?? startConversation(task.id);
+    void sendMessage(id, text);
+  }
+
+  const docsList = docs.length ? (
+    <div className="res__col">
+      <span className="label">Documents générables</span>
+      {docs.map((d) => <DocumentRow key={d.id} doc={d} onOpen={setViewing} />)}
+    </div>
+  ) : null;
+
   return (
     <div className="s-task">
       <B.PrototypeBanner />
@@ -55,20 +78,24 @@ export default function ScreenTask({ taskId }: { taskId: string }) {
         crumbs={<>
           <Link href={routes.plan}>Mon plan</Link>
           <B.Icon name="chevron-right" size={14} />
-          <span>{domain.name}</span>
+          <Link href={routes.domain(domain.id)}>{domain.name}</Link>
           <B.Icon name="chevron-right" size={14} />
           <strong>{detail?.crumb ?? task.title}</strong>
         </>}
         actions={<>
-          <B.Button variant="secondary" size="sm" iconLeft="postpone">Reporter</B.Button>
-          <B.Button variant="primary" size="sm" iconLeft="check">Marquer comme faite</B.Button>
+          {task.status === 'postponed'
+            ? <B.Button variant="secondary" size="sm" iconLeft="circle" onClick={() => setTaskStatus(task.id, 'todo')}>Reprendre</B.Button>
+            : <B.Button variant="secondary" size="sm" iconLeft="postpone" disabled={task.status === 'done'} onClick={() => setTaskStatus(task.id, 'postponed')}>Reporter</B.Button>}
+          {task.status === 'done'
+            ? <B.Button variant="secondary" size="sm" iconLeft="circle" onClick={() => setTaskStatus(task.id, 'todo')}>Rouvrir la tâche</B.Button>
+            : <B.Button variant="primary" size="sm" iconLeft="check" onClick={() => setTaskStatus(task.id, 'done')}>Marquer comme faite</B.Button>}
         </>}
       >
         <div className="layout">
           <div>
             <div className="eyebrow">
               <span className="numeral-s">{domain.index}</span>
-              <span className="label">{domain.name} · tâche {siblings.indexOf(task) + 1} sur {siblings.length}</span>
+              <span className="label">{domain.name} · tâche {siblings.findIndex((t) => t.id === task.id) + 1} sur {siblings.length}</span>
             </div>
             <h1 className="title title-xl">{task.title}</h1>
             <div className="metas">
@@ -107,18 +134,7 @@ export default function ScreenTask({ taskId }: { taskId: string }) {
                 <section className="sec">
                   <div className="sec__h"><span className="label">Ressources</span></div>
                   <div className="res">
-                    <div className="res__col">
-                      <span className="label">Documents générables</span>
-                      {detail.docs.map((d) => (
-                        <div key={d.title} className="doc">
-                          <span className={d.generated ? 'doc__ic ok' : 'doc__ic'}>
-                            <B.Icon name={d.generated ? 'doc' : 'doc-plus'} size={18} />
-                          </span>
-                          <div><strong>{d.title}</strong><span className="body-s">{d.detail}</span></div>
-                          <B.Button variant={d.generated ? 'ink' : 'secondary'} size="sm">{d.action}</B.Button>
-                        </div>
-                      ))}
-                    </div>
+                    {docsList}
                     <div className="res__col">
                       <span className="label">Organismes officiels</span>
                       <div className="links">
@@ -138,14 +154,22 @@ export default function ScreenTask({ taskId }: { taskId: string }) {
                 </section>
               </>
             ) : (
-              <section className="sec">
-                <div className="sec__h"><span className="label">Contenu détaillé</span></div>
-                <p className="why lead-serif">Le détail de cette tâche n’est pas maquetté dans le prototype de vision.</p>
-                <p className="disclaimer body-s">
-                  <B.Icon name="arrow-right" size={16} />
-                  <span>Exemple complet : <Link href={routes.task(SAMPLE_TASK_ID)}>la tâche CGU et CGV</Link>.</span>
-                </p>
-              </section>
+              <>
+                {docsList ? (
+                  <section className="sec">
+                    <div className="sec__h"><span className="label">Ressources</span></div>
+                    <div className="res">{docsList}</div>
+                  </section>
+                ) : null}
+                <section className="sec">
+                  <div className="sec__h"><span className="label">Contenu détaillé</span></div>
+                  <p className="why lead-serif">Le détail de cette tâche n’est pas maquetté dans le prototype de vision.</p>
+                  <p className="disclaimer body-s">
+                    <B.Icon name="arrow-right" size={16} />
+                    <span>Exemple complet : <Link href={routes.task(SAMPLE_TASK_ID)}>la tâche CGU et CGV</Link>.</span>
+                  </p>
+                </section>
+              </>
             )}
           </div>
           <aside className="chat">
@@ -161,27 +185,23 @@ export default function ScreenTask({ taskId }: { taskId: string }) {
               Contexte : description du projet, décisions {domain.name}
             </div>
             <div className="chat__thread">
-              {detail
-                ? detail.messages.map((m, i) => <Message key={i} m={m} />)
-                : <p className="chat__empty body-s">Aucun échange pour cette tâche.</p>}
+              <ChatMessages messages={conversation?.messages ?? []} typing={typing} empty="Aucun échange pour cette tâche. Posez votre première question." />
             </div>
             <div className="chat__in">
-              <B.Input
-                multiline
-                rows={2}
+              <ChatComposer
+                onSend={send}
+                busy={typing}
                 placeholder="Poser une question sur cette tâche…"
-                aria-label="Message au copilote"
-                footer={
-                  <div className="sendrow">
-                    <span className="grow body-s">Les réponses restent liées à cette tâche.</span>
-                    <B.Button variant="primary" size="sm" icon="send">Envoyer</B.Button>
-                  </div>
-                }
+                hint="Les réponses restent liées à cette tâche."
               />
+              {conversation ? (
+                <Link className="pm-link body-s chat__all" href={routes.conversation(conversation.id)}>Ouvrir dans Conversations</Link>
+              ) : null}
             </div>
           </aside>
         </div>
       </Shell>
+      <DocumentViewer doc={viewing && (data.documents.find((d) => d.id === viewing.id) ?? null)} onClose={() => setViewing(null)} />
     </div>
   );
 }

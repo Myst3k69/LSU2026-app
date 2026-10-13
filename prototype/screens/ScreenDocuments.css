@@ -1,0 +1,23 @@
+/* Écran Documents (desktop). Pas de maquette : en-tête, compteurs et onglets repris de l'écran Plan. */
+.s-docs { width: 100%; min-width: 1440px; background: var(--paper); }
+.s-docs .head { display: grid; grid-template-columns: 1fr auto; gap: var(--space-7); align-items: end; padding-bottom: var(--space-6); }
+.s-docs .head .label { color: var(--ink-3); display: block; margin-bottom: var(--space-3); }
+.s-docs .head p { margin-top: var(--space-3); max-width: 600px; color: var(--ink-2); }
+.s-docs .stats { display: flex; }
+.s-docs .stat { display: flex; flex-direction: column; gap: 6px; padding: 0 var(--space-5); border-left: 1px solid var(--line); }
+.s-docs .stat:first-child { border-left: 0; }
+.s-docs .stat b { font-size: 32px; line-height: 1; font-weight: 800; letter-spacing: -0.03em; }
+.s-docs .stat .label { color: var(--ink-3); margin: 0; }
+.s-docs .stat--ok b { color: var(--bleu); }
+.s-docs .bar { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3) 0; margin-bottom: var(--space-6); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.s-docs .tabs { display: flex; gap: 2px; padding: 3px; background: var(--paper-deep); border-radius: var(--radius-sm); }
+.s-docs .tab { display: inline-flex; align-items: center; gap: var(--space-2); height: 34px; padding: 0 var(--space-3); border: 0; border-radius: 6px; background: transparent; color: var(--ink-2); font-family: var(--font-sans); font-size: 14px; font-weight: 600; cursor: pointer; transition: background-color 150ms, color 150ms; }
+.s-docs .tab span { color: var(--ink-3); font-weight: 500; }
+.s-docs .tab.on { background: var(--surface); color: var(--ink); box-shadow: var(--shadow-card); }
+.s-docs .tab:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.s-docs .empty { color: var(--ink-3); }
+.s-docs .grid { display: grid; grid-template-columns: 1fr 1fr; column-gap: var(--space-7); row-gap: var(--space-7); align-items: start; }
+.s-docs .group { display: flex; flex-direction: column; gap: var(--space-2); }
+.s-docs .group__h { display: flex; align-items: center; gap: var(--space-3); padding-bottom: var(--space-3); margin-bottom: var(--space-2); border-bottom: 1.5px solid var(--ink); }
+.s-docs .group__n { margin-left: auto; color: var(--ink-3); }
+.s-docs .disclaimer { margin-top: var(--space-7); color: var(--ink-3); display: flex; gap: var(--space-2); align-items: flex-start; }

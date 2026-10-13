@@ -1,0 +1,4 @@
+/* Écran Mes projets (mobile). Pas de maquette : gouttière space-4 du Plan mobile. */
+.s-projects-m .head { padding: var(--space-5) var(--space-4) var(--space-4); }
+.s-projects-m .head .label { display: block; color: var(--ink-3); margin-bottom: var(--space-2); }
+.s-projects-m .list { display: flex; flex-direction: column; gap: var(--space-3); padding: 0 var(--space-4) var(--space-5); }

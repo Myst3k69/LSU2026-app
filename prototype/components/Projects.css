@@ -1,0 +1,30 @@
+/* Cartes projet et réinitialisation (écran Mes projets). Pas de maquette : cartes du tableau de bord. */
+.pm-pcard { display: flex; flex-direction: column; gap: var(--space-4); padding: var(--space-5); background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); }
+.pm-pcard.is-current { border-color: var(--bleu); }
+.pm-pcard__h { display: flex; align-items: flex-start; gap: var(--space-3); }
+.pm-pcard__h > div { flex: 1; min-width: 0; }
+.pm-pcard__meta { color: var(--ink-3); }
+.pm-pcard__badge { flex: none; padding: 4px 8px; border-radius: var(--radius-xs); background: var(--bleu-soft); color: var(--bleu); }
+.pm-pcard__pitch { color: var(--ink-2); }
+.pm-pcard__prog { display: flex; align-items: center; gap: var(--space-3); }
+.pm-pcard__prog b { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; }
+.pm-pcard__prog .bo-progress { flex: 1; }
+.pm-pcard__prog .body-s { color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.pm-pcard__facts { list-style: none; margin: 0; padding: var(--space-3) 0 0; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 6px; color: var(--ink-2); }
+.pm-pcard__facts li { display: flex; align-items: center; gap: var(--space-2); }
+.pm-pcard__facts .bo-icon { color: var(--ink-3); }
+.pm-pcard__facts .is-forgot { color: var(--orange-ink); }
+.pm-pcard__facts .is-forgot .bo-icon { color: var(--orange); }
+.pm-pcard__actions { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: auto; }
+.pm-pnew { display: flex; flex-direction: column; justify-content: center; gap: var(--space-3); min-height: 280px; padding: var(--space-5); border: 1.5px dashed var(--line-control); border-radius: var(--radius-lg); color: var(--ink-2); text-decoration: none; transition: background-color 150ms; }
+.pm-pnew:hover { background: var(--paper-deep); }
+.pm-pnew:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.pm-pnew .bo-icon { color: var(--bleu); }
+.pm-pnew strong { color: var(--ink); }
+.pm-reset { display: flex; align-items: center; gap: var(--space-5); padding: var(--space-4) 0; border-top: 1px solid var(--line); }
+.pm-reset > div { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+.pm-reset .label, .pm-reset .body-s { color: var(--ink-3); }
+@media (max-width: 767px) {
+  .pm-reset { flex-direction: column; align-items: stretch; gap: var(--space-3); }
+  .pm-pnew { min-height: 0; }
+}

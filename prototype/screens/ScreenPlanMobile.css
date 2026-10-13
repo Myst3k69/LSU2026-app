@@ -3,10 +3,6 @@
 .s-plan-m { position: relative; width: 100%; background: var(--paper); padding-bottom: 84px; }
 .s-plan-m .bo-proto { gap: var(--space-2); padding: 0 var(--space-3); }
 .s-plan-m .bo-proto .label { letter-spacing: 0.1em; font-size: 10px; }
-.s-plan-m .bar { display: flex; align-items: center; gap: var(--space-3); height: 60px; padding: 0 var(--space-4); border-bottom: 1px solid var(--line); }
-.s-plan-m .bar__p { display: flex; flex-direction: column; flex: 1; }
-.s-plan-m .bar__p .label { color: var(--ink-3); font-size: 10px; }
-.s-plan-m .icbtn { display: grid; place-items: center; width: 40px; height: 40px; border-radius: var(--radius-xs); color: var(--ink); background: transparent; border: 0; }
 .s-plan-m .head { padding: var(--space-5) var(--space-4) var(--space-4); }
 .s-plan-m .head .label { display: block; color: var(--ink-3); margin-bottom: var(--space-2); }
 .s-plan-m .prog { display: flex; align-items: center; gap: var(--space-3); margin-top: var(--space-4); }
@@ -33,14 +29,12 @@
 .s-plan-m .crow .n { font-family: var(--font-serif); font-weight: 600; font-size: 22px; }
 .s-plan-m .crow .c { color: var(--ink-3); font-variant-numeric: tabular-nums; }
 .s-plan-m .crow .bo-icon:last-child { color: var(--ink-3); }
-.s-plan-m .tabbar { position: fixed; left: 0; right: 0; bottom: 0; height: 76px; display: grid; grid-template-columns: repeat(4, 1fr); padding: var(--space-2) var(--space-2) var(--space-4); background: var(--surface); border-top: 1px solid var(--line); }
-.s-plan-m .tab { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--ink-3); font-size: 11px; font-weight: 600; }
-.s-plan-m .tab.on { color: var(--bleu); }
 /* Ajouts prototype : onglets et lien d'alerte navigables. */
-.s-plan-m .tab, .s-plan-m .alert .go { text-decoration: none; }
+.s-plan-m .alert .go { text-decoration: none; }
 /* Ajouts prototype : domaines dépliables (lignes repliées et en-têtes de domaine ouverts). */
 .s-plan-m .dom { scroll-margin-top: var(--space-6); }
 .s-plan-m .dom__toggle { cursor: pointer; border-radius: var(--radius-xs); }
 .s-plan-m .dom__toggle:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 .s-plan-m button.crow { width: 100%; padding: 0; background: none; border: 0; border-bottom: 1px solid var(--line); font: inherit; text-align: left; cursor: pointer; }
 .s-plan-m button.crow:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
+.s-plan-m button.more { width: 100%; background: transparent; cursor: pointer; }

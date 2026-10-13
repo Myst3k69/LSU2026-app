@@ -5,17 +5,22 @@ import { useEffect, useState, type KeyboardEvent } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { B } from '@/lib/buildos';
-import { domains, getDomain, getStats, plan, project, tasks, tasksOf, type DomainId } from '@/lib/mock-data';
+import { AddTaskDialog } from '@/components/AddTaskDialog';
+import { MobileHeader, TabBar } from '@/components/Mobile';
+import { domains, getDomain, getStats, tasksOf } from '@/lib/mock-data';
 import { routes } from '@/lib/routes';
+import { useCurrentProject } from '@/lib/store';
+import type { DomainId, Task } from '@/lib/types';
 import { readDomainHash } from '@/lib/useHashTarget';
 import './ScreenPlanMobile.css';
 
-function DomainSection({ id, all, onCollapse }: { id: DomainId; all?: boolean; onCollapse: () => void }) {
+function DomainSection({ id, tasks, all, onCollapse }: { id: DomainId; tasks: Task[]; all?: boolean; onCollapse: () => void }) {
   const router = useRouter();
+  const [showDone, setShowDone] = useState(Boolean(all));
   const d = getDomain(id);
-  const st = getStats(id);
-  const list = tasksOf(id);
-  const open = all ? list : list.filter((t) => t.status !== 'done');
+  const st = getStats(tasks, id);
+  const list = tasksOf(tasks, id);
+  const open = showDone ? list : list.filter((t) => t.status !== 'done');
   const hidden = list.length - open.length;
   function onKeyDown(e: KeyboardEvent<HTMLDivElement>) {
     if (e.key === 'Enter' || e.key === ' ') {
@@ -41,24 +46,33 @@ function DomainSection({ id, all, onCollapse }: { id: DomainId; all?: boolean; o
         />
       ))}
       {hidden ? (
-        <div className="more body-s">
+        <button type="button" className="more body-s" onClick={() => setShowDone(true)}>
           <B.Icon name="check-circle" size={16} />
-          {hidden} tâches faites masquées
+          {hidden} {hidden > 1 ? 'tâches faites masquées' : 'tâche faite masquée'}
           <B.Icon name="chevron-down" size={16} />
-        </div>
+        </button>
       ) : null}
     </section>
   );
 }
 
 export default function ScreenPlanMobile() {
-  const S = getStats();
+  const { project, tasks, plan } = useCurrentProject();
+  const S = getStats(tasks);
   // Domaines dépliés : ceux du plan, plus celui désigné par l'ancre (/plan#finance).
   const [openIds, setOpenIds] = useState<DomainId[]>(() => {
     const target = readDomainHash();
     return target && !plan.mobileOpenDomains.includes(target) ? [...plan.mobileOpenDomains, target] : plan.mobileOpenDomains;
   });
   const [scrollTarget, setScrollTarget] = useState<DomainId | null>(readDomainHash);
+  const [adding, setAdding] = useState(false);
+
+  // Changement de projet : on revient aux domaines ouverts de ce projet.
+  const [projectId, setProjectId] = useState(project.id);
+  if (projectId !== project.id) {
+    setProjectId(project.id);
+    setOpenIds(plan.mobileOpenDomains);
+  }
 
   useEffect(() => {
     if (!scrollTarget) return;
@@ -67,7 +81,7 @@ export default function ScreenPlanMobile() {
   }, [scrollTarget]);
 
   function expand(id: DomainId) {
-    setOpenIds((ids) => [...ids, id]);
+    setOpenIds((ids) => (ids.includes(id) ? ids : [...ids, id]));
     setScrollTarget(id);
   }
   function collapse(id: DomainId) {
@@ -81,21 +95,18 @@ export default function ScreenPlanMobile() {
   return (
     <div className="s-plan-m">
       <B.PrototypeBanner />
-      <header className="bar">
-        <B.Logo variant="icon" height={32} />
-        <div className="bar__p">
-          <span className="label">Projet</span>
-          <strong className="ui">{project.name}</strong>
-        </div>
-        <button className="icbtn" aria-label="Rechercher"><B.Icon name="search" size={20} /></button>
-        <button className="icbtn" aria-label="Ajouter une tâche"><B.Icon name="plus" size={20} /></button>
-      </header>
+      <MobileHeader
+        actions={<>
+          <button className="pm-icbtn" aria-label="Rechercher"><B.Icon name="search" size={20} /></button>
+          <button className="pm-icbtn" aria-label="Ajouter une tâche" onClick={() => setAdding(true)}><B.Icon name="plus" size={20} /></button>
+        </>}
+      />
       <div className="head">
         <span className="label">Généré le {plan.generatedOn}</span>
         <h1 className="title-xl">Plan de lancement</h1>
         <div className="prog">
           <b>{S.pct} %</b>
-          <B.ProgressBar value={S.done} max={S.total} label="Avancement global" />
+          <B.ProgressBar value={S.done} max={S.total || 1} label="Avancement global" />
           <span className="body-s">{S.done}/{S.total}</span>
         </div>
       </div>
@@ -106,17 +117,22 @@ export default function ScreenPlanMobile() {
         <span className="chip">Reportées <span>{S.postponed}</span></span>
         <span className="chip f"><B.Icon name="alert" size={14} strokeWidth={2} />Oubliées <span>{S.forgotten}</span></span>
       </div>
-      <div className="alert">
-        <B.Icon name="alert" size={20} strokeWidth={2} />
-        <p className="body-s"><strong>{S.forgottenOpen} étapes souvent oubliées</strong> restent ouvertes.</p>
-        {firstForgotten ? <Link className="go ui" href={routes.task(firstForgotten.id)}>Voir</Link> : null}
-      </div>
+      {S.forgottenOpen ? (
+        <div className="alert">
+          <B.Icon name="alert" size={20} strokeWidth={2} />
+          <p className="body-s">
+            <strong>{S.forgottenOpen} {S.forgottenOpen > 1 ? 'étapes souvent oubliées' : 'étape souvent oubliée'}</strong>
+            {S.forgottenOpen > 1 ? ' restent ouvertes.' : ' reste ouverte.'}
+          </p>
+          {firstForgotten ? <Link className="go ui" href={routes.task(firstForgotten.id)}>Voir</Link> : null}
+        </div>
+      ) : null}
       {opened.map((d) => (
-        <DomainSection key={d.id} id={d.id} all={plan.expandedDomains.includes(d.id)} onCollapse={() => collapse(d.id)} />
+        <DomainSection key={`${project.id}-${d.id}`} id={d.id} tasks={tasks} all={plan.expandedDomains.includes(d.id)} onCollapse={() => collapse(d.id)} />
       ))}
       <div className="collapsed">
         {collapsed.map((d) => {
-          const st = getStats(d.id);
+          const st = getStats(tasks, d.id);
           return (
             <button key={d.id} type="button" className="crow" aria-expanded="false" onClick={() => expand(d.id)}>
               <span className="n">{d.index}</span>
@@ -128,12 +144,12 @@ export default function ScreenPlanMobile() {
           );
         })}
       </div>
-      <nav className="tabbar" aria-label="Navigation">
-        <Link className="tab" href={routes.home}><B.Icon name="home" size={22} />Accueil</Link>
-        <Link className="tab on" href={routes.plan} aria-current="page"><B.Icon name="list" size={22} />Plan</Link>
-        <Link className="tab" href={routes.project}><B.Icon name="grid" size={22} />Tableau</Link>
-        <span className="tab"><B.Icon name="sparkle" size={22} />Copilote</span>
-      </nav>
+      <TabBar active="plan" />
+      <AddTaskDialog
+        open={adding}
+        onClose={() => setAdding(false)}
+        onAdded={(_, domainId) => expand(domainId)}
+      />
     </div>
   );
 }

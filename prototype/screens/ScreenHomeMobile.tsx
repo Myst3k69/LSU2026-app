@@ -1,26 +1,32 @@
 'use client';
 
 // Écran Accueil (mobile), porté depuis design-system/components/ScreenHomeMobile/preview.html.
+import { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { B } from '@/lib/buildos';
-import { completeness, domains, project, tasksOf } from '@/lib/mock-data';
+import { completenessRules, domainHighlights, domains, homeDraft } from '@/lib/mock-data';
 import { routes } from '@/lib/routes';
+import { detectCompleteness, useCurrentProject } from '@/lib/store';
+import { MobileMenu } from '@/components/Mobile';
+import { NewProjectDialog } from '@/components/NewProjectDialog';
 import './ScreenHomeMobile.css';
 
 // En mobile, les quatre premiers critères tiennent sur une ligne.
-const MOBILE_CHIPS = completeness.slice(0, 4);
+const MOBILE_CHIPS = 4;
 
 export default function ScreenHomeMobile() {
-  const router = useRouter();
+  const { project } = useCurrentProject();
+  const [description, setDescription] = useState(homeDraft);
+  const [naming, setNaming] = useState(false);
+  const chips = detectCompleteness(description, completenessRules).slice(0, MOBILE_CHIPS);
   return (
     <div className="s-home-m">
       <B.PrototypeBanner />
       <header className="bar">
         <B.Logo height={24} />
         <div className="bar__r">
-          <span className="user">{project.founderInitials}</span>
-          <button className="icbtn" aria-label="Menu"><B.Icon name="menu" size={20} /></button>
+          <Link className="user" href={routes.projects} aria-label={`Mes projets (projet actif : ${project.name})`}>{project.founderInitials}</Link>
+          <MobileMenu buttonClassName="icbtn" />
         </div>
       </header>
       <section className="hero">
@@ -34,10 +40,11 @@ export default function ScreenHomeMobile() {
           label="Votre projet en quelques phrases"
           multiline
           rows={7}
-          defaultValue={project.description}
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
           footer={
             <div className="chips">
-              {MOBILE_CHIPS.map((c) => (
+              {chips.map((c) => (
                 <span key={c.label} className={c.done ? 'chip on' : 'chip'}>
                   {c.done ? <B.Icon name="check" size={14} strokeWidth={2.25} /> : <B.Icon name="plus" size={14} />}
                   {c.short}
@@ -46,7 +53,7 @@ export default function ScreenHomeMobile() {
             </div>
           }
         />
-        <B.Button variant="primary" size="lg" block icon="arrow-right" onClick={() => router.push(routes.plan)}>
+        <B.Button variant="primary" size="lg" block icon="arrow-right" onClick={() => setNaming(true)}>
           Générer mon plan
         </B.Button>
         <p className="note body-s">Environ 30 secondes · modifiable ensuite</p>
@@ -62,7 +69,7 @@ export default function ScreenHomeMobile() {
               <Link href={routes.domain(d.id)}>
                 <span className="n">{d.index}</span>
                 <span>{d.name}</span>
-                {tasksOf(d.id).some((t) => t.forgotten) ? <B.ForgottenBadge compact className="f" /> : null}
+                {domainHighlights[d.id].some((x) => x.forgotten) ? <B.ForgottenBadge compact className="f" /> : null}
               </Link>
             </li>
           ))}
@@ -72,6 +79,7 @@ export default function ScreenHomeMobile() {
           Domaine où les fondateurs oublient souvent une étape
         </p>
       </section>
+      <NewProjectDialog open={naming} onClose={() => setNaming(false)} description={description} />
     </div>
   );
 }

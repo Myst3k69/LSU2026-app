@@ -1,34 +1,31 @@
 'use client';
 
 // Écran Accueil (desktop), porté depuis design-system/components/ScreenHome/preview.html.
+// « Générer mon plan » ouvre l'étape 2 (nom du projet) puis crée le projet.
+import { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { B } from '@/lib/buildos';
-import { completeness, domainHighlights, domains, project } from '@/lib/mock-data';
+import { completenessRules, domainHighlights, domains, homeDraft } from '@/lib/mock-data';
 import { routes } from '@/lib/routes';
+import { detectCompleteness } from '@/lib/store';
+import { NewProjectDialog } from '@/components/NewProjectDialog';
+import { SiteHeader } from '@/components/SiteHeader';
 import './ScreenHome.css';
 
+/** « a », « a et b », « a, b et c ». */
+function listFr(items: string[]): string {
+  return items.length > 1 ? `${items.slice(0, -1).join(', ')} et ${items[items.length - 1]}` : items[0] ?? '';
+}
+
 export default function ScreenHome() {
-  const router = useRouter();
+  const [description, setDescription] = useState(homeDraft);
+  const [naming, setNaming] = useState(false);
+  const chips = detectCompleteness(description, completenessRules);
+  const missing = chips.filter((c) => !c.done).map((c) => `votre ${c.label.toLowerCase()}`);
   return (
     <div className="s-home">
       <B.PrototypeBanner />
-      <header className="nav">
-        <B.Logo height={32} />
-        <span className="nav__sep" />
-        <span className="nav__tag label">De l’idée<br />au plan d’action</span>
-        <nav className="nav__links ui">
-          <Link href={routes.project}>Mes projets</Link>
-          <a href="#">Méthode</a>
-          <a href="#">Ressources</a>
-        </nav>
-        <div className="nav__right">
-          <B.Button variant="secondary" size="sm" iconLeft="list" onClick={() => router.push(routes.plan)}>
-            Plan de {project.name}
-          </B.Button>
-          <span className="nav__user">{project.founderInitials}</span>
-        </div>
-      </header>
+      <SiteHeader />
       <section className="hero">
         <div>
           <div className="kick label">
@@ -55,10 +52,11 @@ export default function ScreenHome() {
               size="lg"
               rows={6}
               aria-label="Description du projet"
-              defaultValue={project.description}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
               footer={
                 <div className="chips">
-                  {completeness.map((c) => (
+                  {chips.map((c) => (
                     <span key={c.label} className={c.done ? 'chip on' : 'chip'}>
                       {c.done ? <B.Icon name="check" size={14} strokeWidth={2.25} /> : <B.Icon name="plus" size={14} />}
                       {c.label}
@@ -68,8 +66,12 @@ export default function ScreenHome() {
               }
             />
             <div className="card__go">
-              <span className="body-s">Ajoutez votre budget et votre équipe pour un plan plus précis. Environ 30 secondes.</span>
-              <B.Button variant="primary" size="lg" icon="arrow-right" onClick={() => router.push(routes.plan)}>
+              <span className="body-s">
+                {missing.length
+                  ? `Ajoutez ${listFr(missing)} pour un plan plus précis. Environ 30 secondes.`
+                  : 'Votre description est complète. Environ 30 secondes.'}
+              </span>
+              <B.Button variant="primary" size="lg" icon="arrow-right" onClick={() => setNaming(true)}>
                 Générer mon plan
               </B.Button>
             </div>
@@ -102,6 +104,7 @@ export default function ScreenHome() {
           </Link>
         ))}
       </section>
+      <NewProjectDialog open={naming} onClose={() => setNaming(false)} description={description} />
     </div>
   );
 }

@@ -11,6 +11,12 @@ const ScreenPlan = dynamic(() => import('./ScreenPlan'), { ssr: false });
 const ScreenPlanMobile = dynamic(() => import('./ScreenPlanMobile'), { ssr: false });
 const ScreenTask = dynamic(() => import('./ScreenTask'), { ssr: false });
 const ScreenDashboard = dynamic(() => import('./ScreenDashboard'), { ssr: false });
+const ScreenConversations = dynamic(() => import('./ScreenConversations'), { ssr: false });
+const ScreenConversationsMobile = dynamic(() => import('./ScreenConversationsMobile'), { ssr: false });
+const ScreenDocuments = dynamic(() => import('./ScreenDocuments'), { ssr: false });
+const ScreenDocumentsMobile = dynamic(() => import('./ScreenDocumentsMobile'), { ssr: false });
+const ScreenProjects = dynamic(() => import('./ScreenProjects'), { ssr: false });
+const ScreenProjectsMobile = dynamic(() => import('./ScreenProjectsMobile'), { ssr: false });
 
 export function HomeView() {
   return useIsMobile() ? <ScreenHomeMobile /> : <ScreenHome />;
@@ -26,4 +32,18 @@ export function TaskView({ taskId }: { taskId: string }) {
 
 export function ProjectView() {
   return <ScreenDashboard />;
+}
+
+export function ConversationsView({ conversationId }: { conversationId?: string }) {
+  return useIsMobile()
+    ? <ScreenConversationsMobile selectedId={conversationId} />
+    : <ScreenConversations selectedId={conversationId} />;
+}
+
+export function DocumentsView() {
+  return useIsMobile() ? <ScreenDocumentsMobile /> : <ScreenDocuments />;
+}
+
+export function ProjectsView() {
+  return useIsMobile() ? <ScreenProjectsMobile /> : <ScreenProjects />;
 }

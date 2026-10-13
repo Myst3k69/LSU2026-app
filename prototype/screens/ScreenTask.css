@@ -26,11 +26,6 @@
 .s-task .res { display: flex; flex-direction: column; gap: var(--space-5); }
 .s-task .links { display: grid; grid-template-columns: 1fr 1fr; column-gap: var(--space-5); }
 .s-task .res__col .label { display: block; color: var(--ink-3); margin-bottom: var(--space-3); }
-.s-task .doc { display: grid; grid-template-columns: 36px 1fr auto; gap: var(--space-3); align-items: center; padding: var(--space-3); background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-md); margin-bottom: var(--space-2); }
-.s-task .doc__ic { display: grid; place-items: center; width: 36px; height: 36px; border-radius: var(--radius-xs); background: var(--paper-deep); color: var(--ink); }
-.s-task .doc__ic.ok { background: var(--bleu-soft); color: var(--bleu); }
-.s-task .doc strong { display: block; font-size: 14px; line-height: 20px; }
-.s-task .doc span.body-s { color: var(--ink-3); }
 .s-task .link { display: grid; grid-template-columns: 1fr auto; gap: var(--space-3); align-items: start; padding: var(--space-3) 0; border-bottom: 1px solid var(--line); color: var(--ink); text-decoration: none; }
 .s-task .link strong { display: block; font-size: 14px; line-height: 20px; font-weight: 600; }
 .s-task .link span { color: var(--bleu); }
@@ -43,14 +38,10 @@
 .s-task .chat__ctx { margin: var(--space-4) var(--space-5) 0; padding: var(--space-2) var(--space-3); border-radius: var(--radius-xs); background: var(--paper); color: var(--ink-3); display: flex; gap: var(--space-2); align-items: center; }
 .s-task .chat__thread { flex: 1; display: flex; flex-direction: column; gap: var(--space-5); padding: var(--space-5); }
 .s-task .chat__in { padding: var(--space-4) var(--space-5) var(--space-5); border-top: 1px solid var(--line); }
-.s-task .sendrow { display: flex; align-items: center; gap: var(--space-2); width: 100%; }
-.s-task .sendrow .grow { flex: 1; color: var(--ink-3); }
-.s-task .gen { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3); background: var(--surface); border-radius: var(--radius-xs); }
-.s-task .gen .bo-icon { color: var(--bleu); }
-.s-task .gen strong { display: block; font-size: 14px; line-height: 20px; }
-.s-task .gen .body-s { color: var(--ink-3); }
 /* Ajouts prototype : fil d'Ariane navigable, tâche sans contenu maquetté. */
 .s-task .bo-topbar__crumbs a { color: inherit; text-decoration: none; }
 .s-task .bo-topbar__crumbs a:hover { color: var(--ink); text-decoration: underline; }
 .s-task .disclaimer a { color: var(--bleu); }
-.s-task .chat__empty { color: var(--ink-3); }
+.s-task .res__col .pm-doc { margin-bottom: var(--space-2); }
+.s-task .res__col .pm-doc a { color: var(--bleu); }
+.s-task .chat__all { display: inline-block; margin-top: var(--space-3); }
