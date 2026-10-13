@@ -1,0 +1,19 @@
+<!-- @dsCard group="Marque" height=200 subtitle="Logotype couleur, ink, inversé · icône" -->
+<!doctype html>
+<html lang="fr">
+<head><meta charset="utf-8"><title>Logo</title>
+<style>.wrap{display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr;gap:var(--space-3);padding:var(--space-5)}.tile{display:grid;place-items:center;height:136px;border-radius:var(--radius-md);background:var(--surface);border:1px solid var(--line)}.tile.ink{background:var(--ink);border-color:var(--ink)}.tile.bleu{background:var(--bleu);border-color:var(--bleu)}.icons{display:flex;gap:var(--space-4)}</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var B = window.BuildOS, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(
+    h('div', { className: 'wrap' },
+      h('div', { className: 'tile' }, h(B.Logo, { height: 40 })),
+      h('div', { className: 'tile ink' }, h(B.Logo, { height: 30, tone: 'reverse' })),
+      h('div', { className: 'tile bleu' }, h(B.Logo, { height: 30, tone: 'reverse' })),
+      h('div', { className: 'tile' }, h('div', { className: 'icons' }, h(B.Logo, { variant: 'icon', height: 64 }), h(B.Logo, { variant: 'icon', tone: 'ink', height: 64 })))));
+</script>
+</body>
+</html>

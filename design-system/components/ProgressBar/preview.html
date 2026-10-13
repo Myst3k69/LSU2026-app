@@ -1,0 +1,15 @@
+<!-- @dsCard group="Structure" height=120 subtitle="Bleu par défaut, fin, ink" -->
+<!doctype html>
+<html lang="fr">
+<head><meta charset="utf-8"><title>ProgressBar</title>
+<style>.wrap{display:flex;flex-direction:column;gap:var(--space-4);padding:var(--space-5);max-width:480px}</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var B = window.BuildOS, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(
+    h('div', { className: 'wrap' }, h(B.ProgressBar, { value: 10, max: 27 }), h(B.ProgressBar, { value: 2, max: 4, size: 'sm' }), h(B.ProgressBar, { value: 1, max: 3, tone: 'ink' })));
+</script>
+</body>
+</html>

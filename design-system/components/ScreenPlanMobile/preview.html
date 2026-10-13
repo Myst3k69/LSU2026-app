@@ -1,0 +1,100 @@
+<!-- @dsCard group="Écrans — mobile" width=390 height=1864 page subtitle="Plan · mobile" -->
+<!doctype html>
+<html lang="fr">
+<head><meta charset="utf-8"><title>Plan — mobile</title>
+<style>
+  .scr { position: relative; width: 390px; background: var(--paper); padding-bottom: 84px; }
+  .bo-proto { gap: var(--space-2); padding: 0 var(--space-3); }
+  .bo-proto .label { letter-spacing: 0.1em; font-size: 10px; }
+  .bar { display: flex; align-items: center; gap: var(--space-3); height: 60px; padding: 0 var(--space-4); border-bottom: 1px solid var(--line); }
+  .bar__p { display: flex; flex-direction: column; flex: 1; }
+  .bar__p .label { color: var(--ink-3); font-size: 10px; }
+  .icbtn { display: grid; place-items: center; width: 40px; height: 40px; border-radius: var(--radius-xs); color: var(--ink); background: transparent; border: 0; }
+  .head { padding: var(--space-5) var(--space-4) var(--space-4); }
+  .head .label { display: block; color: var(--ink-3); margin-bottom: var(--space-2); }
+  .prog { display: flex; align-items: center; gap: var(--space-3); margin-top: var(--space-4); }
+  .prog .bo-progress { flex: 1; }
+  .prog b { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; }
+  .prog .body-s { color: var(--ink-3); }
+  .chips { display: flex; gap: var(--space-2); padding: 0 var(--space-4) var(--space-4); overflow: hidden; white-space: nowrap; }
+  .chip { flex: none; display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 var(--space-3); border-radius: var(--radius-xs); background: var(--surface); color: var(--ink-2); box-shadow: inset 0 0 0 1px var(--line-control); }
+  .chip span { color: var(--ink-3); font-weight: 500; }
+  .chip.on { background: var(--ink); color: var(--surface); box-shadow: none; }
+  .chip.on span { color: var(--paper-deep); }
+  .chip.f { color: var(--orange-ink); }
+  .alert { display: flex; gap: var(--space-3); align-items: center; margin: 0 var(--space-4) var(--space-6); padding: var(--space-3) var(--space-4); background: var(--orange-soft); border-radius: var(--radius-md); }
+  .alert .bo-icon { color: var(--orange-ink); flex: none; }
+  .alert p { flex: 1; color: var(--ink); }
+  .alert .go { color: var(--orange-ink); }
+  .dom { padding: 0 var(--space-4); display: flex; flex-direction: column; gap: var(--space-2); margin-bottom: var(--space-6); }
+  .dom .bo-domain { margin-bottom: var(--space-2); }
+  .dom .bo-task { grid-template-columns: 22px 1fr 16px; gap: 10px; }
+  .more { display: flex; align-items: center; gap: var(--space-2); height: 40px; padding: 0 var(--space-3); border: 1px dashed var(--line-control); border-radius: var(--radius-md); color: var(--ink-3); }
+  .more .bo-icon:first-child { color: var(--vert); }
+  .collapsed { margin: 0 var(--space-4); border-top: 1.5px solid var(--ink); }
+  .crow { display: grid; grid-template-columns: 40px 1fr auto auto 20px; gap: var(--space-2); align-items: center; height: 56px; border-bottom: 1px solid var(--line); color: var(--ink); }
+  .crow .n { font-family: var(--font-serif); font-weight: 600; font-size: 22px; }
+  .crow .c { color: var(--ink-3); font-variant-numeric: tabular-nums; }
+  .crow .bo-icon:last-child { color: var(--ink-3); }
+  .tabbar { position: absolute; left: 0; right: 0; bottom: 0; height: 76px; display: grid; grid-template-columns: repeat(4, 1fr); padding: var(--space-2) var(--space-2) var(--space-4); background: var(--surface); border-top: 1px solid var(--line); }
+  .tab { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--ink-3); font-size: 11px; font-weight: 600; }
+  .tab.on { color: var(--bleu); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var B = window.BuildOS, h = React.createElement, D = B.Demo, S = D.stats();
+  function Domain(props) {
+    var d = D.domain(props.id), st = D.stats(d.id), list = D.tasksOf(d.id);
+    var open = props.all ? list : list.filter(function (t) { return t.status !== 'done'; });
+    var hidden = list.length - open.length;
+    return h('section', { className: 'dom' },
+      h(B.DomainHeader, { index: d.index, name: d.name, icon: d.icon, done: st.done, total: st.total, forgotten: st.forgottenOpen, compact: true }),
+      open.map(function (t) { return h(B.TaskCard, { key: t.id, title: t.title, status: t.status, forgotten: t.forgotten, meta: t.meta, compact: true, onClick: function () {} }); }),
+      hidden ? h('div', { className: 'more body-s' }, h(B.Icon, { name: 'check-circle', size: 16 }), hidden + ' tâches faites masquées', h(B.Icon, { name: 'chevron-down', size: 16 })) : null);
+  }
+  function Screen() {
+    var rest = ['marche', 'finance', 'marketing', 'tech', 'operations', 'veille'];
+    return h('div', { className: 'scr' },
+      h(B.PrototypeBanner),
+      h('header', { className: 'bar' },
+        h(B.Logo, { variant: 'icon', height: 32 }),
+        h('div', { className: 'bar__p' }, h('span', { className: 'label' }, 'Projet'), h('strong', { className: 'ui' }, D.project.name)),
+        h('button', { className: 'icbtn', 'aria-label': 'Rechercher' }, h(B.Icon, { name: 'search', size: 20 })),
+        h('button', { className: 'icbtn', 'aria-label': 'Ajouter une tâche' }, h(B.Icon, { name: 'plus', size: 20 }))),
+      h('div', { className: 'head' },
+        h('span', { className: 'label' }, 'Généré le 28 sept.'),
+        h('h1', { className: 'title-xl' }, 'Plan de lancement'),
+        h('div', { className: 'prog' }, h('b', null, S.pct + ' %'), h(B.ProgressBar, { value: S.done, max: S.total, label: 'Avancement global' }), h('span', { className: 'body-s' }, S.done + '/' + S.total))),
+      h('div', { className: 'chips ui' },
+        h('span', { className: 'chip on' }, 'Toutes ', h('span', null, S.total)),
+        h('span', { className: 'chip' }, 'À faire ', h('span', null, S.todo)),
+        h('span', { className: 'chip' }, 'Faites ', h('span', null, S.done)),
+        h('span', { className: 'chip' }, 'Reportées ', h('span', null, S.postponed)),
+        h('span', { className: 'chip f' }, h(B.Icon, { name: 'alert', size: 14, strokeWidth: 2 }), 'Oubliées ', h('span', null, S.forgotten))),
+      h('div', { className: 'alert' },
+        h(B.Icon, { name: 'alert', size: 20, strokeWidth: 2 }),
+        h('p', { className: 'body-s' }, h('strong', null, S.forgottenOpen + ' étapes souvent oubliées'), ' restent ouvertes.'),
+        h('span', { className: 'go ui' }, 'Voir')),
+      h(Domain, { id: 'produit' }),
+      h(Domain, { id: 'juridique', all: true }),
+      h('div', { className: 'collapsed' }, rest.map(function (id) {
+        var d = D.domain(id), st = D.stats(id);
+        return h('div', { key: id, className: 'crow' },
+          h('span', { className: 'n' }, d.index),
+          h('span', { className: 'title-s' }, d.name),
+          st.forgottenOpen ? h(B.ForgottenBadge, { compact: true }) : h('span'),
+          h('span', { className: 'c body-s' }, st.done + '/' + st.total),
+          h(B.Icon, { name: 'chevron-down', size: 18 }));
+      })),
+      h('nav', { className: 'tabbar', 'aria-label': 'Navigation' },
+        h('span', { className: 'tab' }, h(B.Icon, { name: 'home', size: 22 }), 'Accueil'),
+        h('span', { className: 'tab on' }, h(B.Icon, { name: 'list', size: 22 }), 'Plan'),
+        h('span', { className: 'tab' }, h(B.Icon, { name: 'grid', size: 22 }), 'Tableau'),
+        h('span', { className: 'tab' }, h(B.Icon, { name: 'sparkle', size: 22 }), 'Copilote')));
+  }
+  ReactDOM.createRoot(document.getElementById('root')).render(h(Screen));
+</script>
+</body>
+</html>

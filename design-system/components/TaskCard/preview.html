@@ -1,0 +1,21 @@
+<!-- @dsCard group="Tâches" height=480 subtitle="À faire, faite, reportée, souvent oubliée, sélectionnée" -->
+<!doctype html>
+<html lang="fr">
+<head><meta charset="utf-8"><title>TaskCard</title>
+<style>.wrap{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3);padding:var(--space-5)}</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var B = window.BuildOS, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(
+    h('div', { className: 'wrap' },
+      h(B.TaskCard, { title: 'Rédiger les CGU de la plateforme et le modèle de CGV', status: 'todo', forgotten: true, meta: '4 documents générables', onClick: function () {} , selected: true }),
+      h(B.TaskCard, { title: 'Tester la maquette avec 5 cyclistes lyonnais', status: 'todo', meta: 'Échéance 24 oct.', onClick: function () {} }),
+      h(B.TaskCard, { title: 'Choisir le statut juridique', status: 'done', meta: 'SASU retenue', onClick: function () {} }),
+      h(B.TaskCard, { title: 'Nouer 3 partenariats avec des magasins de vélo', status: 'postponed', meta: 'Après le MVP', onClick: function () {} }),
+      h(B.TaskCard, { domain: 'Opérations', title: 'Souscrire une assurance RC professionnelle', description: 'Un réparateur qui abîme un vélo chez un client : qui paie ? Sans assurance, c’est la plateforme qui s’expose.', status: 'todo', forgotten: true, meta: 'Échéance 25 oct.', onClick: function () {} }),
+      h(B.TaskCard, { domain: 'Finance', title: 'Construire le prévisionnel sur 12 mois', status: 'todo', meta: 'Échéance 31 oct.', compact: true, onClick: function () {} })));
+</script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!-- @dsCard group="Actions" height=224 subtitle="Primaire, ink, secondaire, fantôme · 3 tailles" -->
+<!doctype html>
+<html lang="fr">
+<head><meta charset="utf-8"><title>Button</title>
+<style>.wrap{display:flex;flex-direction:column;gap:var(--space-4);padding:var(--space-5)}.row{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-3)}</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var B = window.BuildOS, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(
+    h('div', { className: 'wrap' },
+      h('div', { className: 'row' },
+        h(B.Button, { variant: 'primary', size: 'lg', icon: 'arrow-right' }, 'Générer mon plan'),
+        h(B.Button, { variant: 'secondary', size: 'lg', iconLeft: 'sparkle' }, 'Voir un exemple')),
+      h('div', { className: 'row' },
+        h(B.Button, { variant: 'primary', icon: 'arrow-right' }, 'Marquer comme faite'),
+        h(B.Button, { variant: 'ink', icon: 'arrow-right' }, 'Ouvrir le plan'),
+        h(B.Button, { variant: 'secondary' }, 'Reporter'),
+        h(B.Button, { variant: 'ghost', iconLeft: 'plus' }, 'Ajouter une tâche'),
+        h(B.Button, { variant: 'secondary', size: 'sm', iconLeft: 'doc-plus' }, 'Générer'),
+        h(B.Button, { variant: 'primary', disabled: true }, 'Indisponible'))));
+</script>
+</body>
+</html>

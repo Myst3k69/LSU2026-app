@@ -1,0 +1,20 @@
+<!-- @dsCard group="Structure" width=1280 height=780 subtitle="Barre latérale, fil d’Ariane, accès au copilote" -->
+<!doctype html>
+<html lang="fr">
+<head><meta charset="utf-8"><title>AppShell</title>
+<style>.scr{width:1280px;height:780px;overflow:hidden}.ph{display:grid;place-items:center;height:360px;border:1px dashed var(--line-control);border-radius:var(--radius-md);color:var(--ink-3)}</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var B = window.BuildOS, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(
+    h('div', { className: 'scr' },
+      h(B.AppShell, {
+        active: 'plan', domain: 'juridique',
+        crumbs: [h('span', { key: 1 }, 'Mon plan'), h(B.Icon, { key: 2, name: 'chevron-right', size: 14 }), h('strong', { key: 3 }, 'Juridique & admin')],
+        actions: [h(B.Button, { key: 1, variant: 'primary', size: 'sm', iconLeft: 'plus' }, 'Ajouter une tâche')]
+      }, h('div', { className: 'ph body-s' }, 'Contenu de la page'))));
+</script>
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!-- @dsCard group="Écrans — desktop" width=1440 height=1456 page subtitle="Détail d’une tâche · pourquoi, ressources, conversation" -->
+<!doctype html>
+<html lang="fr">
+<head><meta charset="utf-8"><title>Détail d’une tâche — desktop</title>
+<style>
+  .scr { width: 1440px; background: var(--paper); }
+  .scr .bo-main__body { padding-top: var(--space-5); }
+  .layout { display: grid; grid-template-columns: 1fr 392px; gap: var(--space-6); align-items: start; }
+  .back { display: inline-flex; align-items: center; gap: var(--space-2); color: var(--ink-3); margin-bottom: var(--space-5); }
+  .eyebrow { display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-3); }
+  .eyebrow .numeral-s { color: var(--ink); }
+  .eyebrow .label { color: var(--ink-3); }
+  .title { max-width: 680px; }
+  .metas { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); margin-top: var(--space-4); padding-bottom: var(--space-5); border-bottom: 1.5px solid var(--ink); }
+  .metas .body-s { color: var(--ink-3); margin-left: var(--space-2); display: inline-flex; gap: 6px; align-items: center; }
+  .sec { padding: var(--space-6) 0 0; }
+  .sec__h { display: flex; align-items: baseline; gap: var(--space-3); margin-bottom: var(--space-4); }
+  .sec__h .label { color: var(--ink-3); }
+  .why { color: var(--ink); max-width: 720px; }
+  .reasons { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-5); margin-top: var(--space-5); }
+  .reason { padding-top: var(--space-3); border-top: 1px solid var(--line); }
+  .reason strong { display: block; margin-bottom: 6px; }
+  .reason p { color: var(--ink-2); }
+  .reason .ref { margin-top: var(--space-2); color: var(--ink-3); }
+  .oublie { display: flex; gap: var(--space-3); margin-top: var(--space-5); padding: var(--space-4); background: var(--orange-soft); border-radius: var(--radius-md); }
+  .oublie .bo-icon { color: var(--orange-ink); margin-top: 1px; }
+  .oublie p { color: var(--ink-2); }
+  .oublie strong { color: var(--orange-ink); }
+  .res { display: flex; flex-direction: column; gap: var(--space-5); }
+  .links { display: grid; grid-template-columns: 1fr 1fr; column-gap: var(--space-5); }
+  .res__col .label { display: block; color: var(--ink-3); margin-bottom: var(--space-3); }
+  .doc { display: grid; grid-template-columns: 36px 1fr auto; gap: var(--space-3); align-items: center; padding: var(--space-3); background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-md); margin-bottom: var(--space-2); }
+  .doc__ic { display: grid; place-items: center; width: 36px; height: 36px; border-radius: var(--radius-xs); background: var(--paper-deep); color: var(--ink); }
+  .doc__ic.ok { background: var(--bleu-soft); color: var(--bleu); }
+  .doc strong { display: block; font-size: 14px; line-height: 20px; }
+  .doc span.body-s { color: var(--ink-3); }
+  .link { display: grid; grid-template-columns: 1fr auto; gap: var(--space-3); align-items: start; padding: var(--space-3) 0; border-bottom: 1px solid var(--line); color: var(--ink); text-decoration: none; }
+  .link strong { display: block; font-size: 14px; line-height: 20px; font-weight: 600; }
+  .link span { color: var(--bleu); }
+  .link .bo-icon { color: var(--ink-3); }
+  .disclaimer { margin-top: var(--space-5); color: var(--ink-3); display: flex; gap: var(--space-2); align-items: flex-start; }
+  .chat { position: sticky; top: var(--space-5); display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); overflow: hidden; }
+  .chat__head { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-4) var(--space-5); border-bottom: 1px solid var(--line); }
+  .chat__head .ic { display: grid; place-items: center; width: 32px; height: 32px; border-radius: var(--radius-xs); background: var(--bleu); color: var(--on-bleu); }
+  .chat__head .body-s { color: var(--ink-3); }
+  .chat__ctx { margin: var(--space-4) var(--space-5) 0; padding: var(--space-2) var(--space-3); border-radius: var(--radius-xs); background: var(--paper); color: var(--ink-3); display: flex; gap: var(--space-2); align-items: center; }
+  .chat__thread { flex: 1; display: flex; flex-direction: column; gap: var(--space-5); padding: var(--space-5); }
+  .chat__in { padding: var(--space-4) var(--space-5) var(--space-5); border-top: 1px solid var(--line); }
+  .sendrow { display: flex; align-items: center; gap: var(--space-2); width: 100%; }
+  .sendrow .grow { flex: 1; color: var(--ink-3); }
+  .gen { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3); background: var(--surface); border-radius: var(--radius-xs); }
+  .gen .bo-icon { color: var(--bleu); }
+  .gen strong { display: block; font-size: 14px; line-height: 20px; }
+  .gen .body-s { color: var(--ink-3); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var B = window.BuildOS, h = React.createElement, D = B.Demo;
+  var DOCS = [
+    { t: 'CGU de la plateforme', d: 'Généré · v1 · 11 articles · hier', ok: true, btn: 'Ouvrir' },
+    { t: 'Modèle de CGV pour les réparateurs', d: 'Prix, frais de déplacement, garantie, annulation', btn: 'Générer' },
+    { t: 'Formulaire de rétractation', d: 'À joindre à la confirmation de réservation', btn: 'Générer' },
+    { t: 'Page « Comment sont classés les réparateurs »', d: 'Information loyale des utilisateurs de la plateforme', btn: 'Générer' }
+  ];
+  var LINKS = [
+    { t: 'Conditions générales de vente : obligations', u: 'entreprendre.service-public.fr' },
+    { t: 'Plateformes en ligne : obligations d’information', u: 'economie.gouv.fr/dgccrf' },
+    { t: 'Médiation de la consommation', u: 'economie.gouv.fr/mediation-conso' },
+    { t: 'Politique de confidentialité et données clients', u: 'cnil.fr' }
+  ];
+  function Screen() {
+    return h('div', { className: 'scr' },
+      h(B.PrototypeBanner),
+      h(B.AppShell, {
+        active: 'plan', domain: 'juridique',
+        crumbs: [h('span', { key: 1 }, 'Mon plan'), h(B.Icon, { key: 2, name: 'chevron-right', size: 14 }), h('span', { key: 3 }, 'Juridique & admin'), h(B.Icon, { key: 4, name: 'chevron-right', size: 14 }), h('strong', { key: 5 }, 'CGU et CGV')],
+        actions: [h(B.Button, { key: 1, variant: 'secondary', size: 'sm', iconLeft: 'postpone' }, 'Reporter'), h(B.Button, { key: 2, variant: 'primary', size: 'sm', iconLeft: 'check' }, 'Marquer comme faite')]
+      },
+        h('div', { className: 'layout' },
+          h('div', null,
+            h('div', { className: 'eyebrow' }, h('span', { className: 'numeral-s' }, '03'), h('span', { className: 'label' }, 'Juridique & admin · tâche 2 sur 4')),
+            h('h1', { className: 'title title-xl' }, 'Rédiger les CGU de la plateforme et le modèle de CGV'),
+            h('div', { className: 'metas' },
+              h(B.TaskStatus, { status: 'todo' }), h(B.ForgottenBadge),
+              h('span', { className: 'body-s' }, h(B.Icon, { name: 'calendar', size: 16 }), 'Échéance 20 oct.'),
+              h('span', { className: 'body-s' }, h(B.Icon, { name: 'flag', size: 16 }), 'Bloque : ouverture des réservations payantes')),
+            h('section', { className: 'sec' },
+              h('div', { className: 'sec__h' }, h('span', { className: 'label' }, 'Pourquoi c’est indispensable')),
+              h('p', { className: 'why lead-serif' }, 'Sans conditions générales, chaque réservation repose sur un accord flou : prix, annulation, responsabilité si le vélo est abîmé.'),
+              h('div', { className: 'reasons' },
+                h('div', { className: 'reason' }, h('strong', { className: 'title-s' }, 'Vente à des particuliers'), h('p', { className: 'body-s' }, 'Avant de payer, le client doit connaître le prix, les frais de déplacement, les conditions d’annulation et son droit de rétractation.'), h('p', { className: 'ref body-s' }, 'Code de la consommation')),
+                h('div', { className: 'reason' }, h('strong', { className: 'title-s' }, 'Plateforme de mise en relation'), h('p', { className: 'body-s' }, 'Vous devez expliquer comment les réparateurs sont référencés et classés, et qui vend la prestation.'), h('p', { className: 'ref body-s' }, 'Article L111-7, Code de la consommation')),
+                h('div', { className: 'reason' }, h('strong', { className: 'title-s' }, 'Litiges'), h('p', { className: 'body-s' }, 'Un professionnel qui vend à des consommateurs doit leur indiquer un médiateur de la consommation.'), h('p', { className: 'ref body-s' }, 'Médiation de la consommation'))),
+              h('div', { className: 'oublie' },
+                h(B.Icon, { name: 'alert', size: 18, strokeWidth: 2 }),
+                h('p', { className: 'body-s' }, h('strong', null, 'Pourquoi elle est souvent oubliée. '), 'Elle semble pouvoir attendre le lancement. En pratique, elle conditionne l’ouverture des réservations payantes et protège la plateforme dès le premier litige.'))),
+            h('section', { className: 'sec' },
+              h('div', { className: 'sec__h' }, h('span', { className: 'label' }, 'Ressources')),
+              h('div', { className: 'res' },
+                h('div', { className: 'res__col' },
+                  h('span', { className: 'label' }, 'Documents générables'),
+                  DOCS.map(function (d, i) {
+                    return h('div', { key: i, className: 'doc' },
+                      h('span', { className: 'doc__ic' + (d.ok ? ' ok' : '') }, h(B.Icon, { name: d.ok ? 'doc' : 'doc-plus', size: 18 })),
+                      h('div', null, h('strong', null, d.t), h('span', { className: 'body-s' }, d.d)),
+                      h(B.Button, { variant: d.ok ? 'ink' : 'secondary', size: 'sm' }, d.btn));
+                  })),
+                h('div', { className: 'res__col' },
+                  h('span', { className: 'label' }, 'Organismes officiels'),
+                  h('div', { className: 'links' }, LINKS.map(function (l, i) {
+                    return h('a', { key: i, className: 'link', href: '#' }, h('div', null, h('strong', null, l.t), h('span', { className: 'body-s' }, l.u)), h(B.Icon, { name: 'external', size: 16 }));
+                  })))),
+              h('p', { className: 'disclaimer body-s' }, h(B.Icon, { name: 'alert', size: 16 }), 'Les documents générés sont des trames. Faites-les relire par un professionnel du droit avant publication.'))),
+          h('aside', { className: 'chat' },
+            h('div', { className: 'chat__head' },
+              h('span', { className: 'ic' }, h(B.Icon, { name: 'sparkle', size: 16 })),
+              h('div', null, h('strong', { className: 'title-s' }, 'Copilote IA'), h('div', { className: 'body-s' }, 'Conversation rattachée à cette tâche'))),
+            h('div', { className: 'chat__ctx body-s' }, h(B.Icon, { name: 'list', size: 14 }), 'Contexte : description du projet, décisions Juridique & admin'),
+            h('div', { className: 'chat__thread' },
+              h(B.ChatBubble, { from: 'user', initials: 'CF', author: 'Camille', time: 'Hier, 18:02' }, 'Les réparateurs doivent-ils aussi avoir leurs propres CGV ?'),
+              h(B.ChatBubble, { from: 'ai', time: 'Hier, 18:02' },
+                h('p', null, 'Oui. Chaque réparateur vend sa prestation au client : il doit l’informer de ses prix, frais de déplacement et garanties. Votre plateforme, elle, encadre la mise en relation.'),
+                h('p', null, 'Je vous propose :'),
+                h('ol', null, h('li', null, 'des CGU pour la plateforme ;'), h('li', null, 'un modèle de CGV que chaque réparateur adapte ;'), h('li', null, 'une page qui explique le classement des réparateurs.'))),
+              h(B.ChatBubble, { from: 'user', initials: 'CF', author: 'Camille', time: 'Hier, 18:05' }, 'Génère la trame des CGU, avec une annulation gratuite jusqu’à 24 h avant.'),
+              h(B.ChatBubble, { from: 'ai', time: 'Hier, 18:05', actions: [{ label: 'Ouvrir les CGU', icon: 'doc' }, { label: 'Modèle de CGV', icon: 'doc-plus' }] },
+                h('div', { className: 'gen' }, h(B.Icon, { name: 'doc', size: 20 }), h('div', null, h('strong', null, 'CGU de la plateforme · v1'), h('span', { className: 'body-s' }, '11 articles · annulation gratuite jusqu’à 24 h'))),
+                h('p', null, 'Deux points à valider avec un juriste : la responsabilité en cas de dommage au vélo et la procédure de médiation.'))),
+            h('div', { className: 'chat__in' },
+              h(B.Input, { multiline: true, rows: 2, placeholder: 'Poser une question sur cette tâche…', 'aria-label': 'Message au copilote',
+                footer: h('div', { className: 'sendrow' }, h('span', { className: 'grow body-s' }, 'Les réponses restent liées à cette tâche.'), h(B.Button, { variant: 'primary', size: 'sm', icon: 'send' }, 'Envoyer')) }))))));
+  }
+  ReactDOM.createRoot(document.getElementById('root')).render(h(Screen));
+</script>
+</body>
+</html>
