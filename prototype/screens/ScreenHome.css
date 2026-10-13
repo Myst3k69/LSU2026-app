@@ -37,3 +37,7 @@
 .s-home .dom__n { font-family: var(--font-serif); font-weight: 600; font-size: 15px; color: var(--ink-3); }
 .s-home .dom__ex { color: var(--ink-3); }
 .s-home .dom__ex b { color: var(--orange-ink); font-weight: 600; }
+/* Ajout prototype : chaque domaine du bandeau mène à sa section du plan. */
+.s-home a.dom { color: inherit; text-decoration: none; transition: background-color 150ms; }
+.s-home a.dom:hover { background: var(--paper-deep); }
+.s-home a.dom:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }

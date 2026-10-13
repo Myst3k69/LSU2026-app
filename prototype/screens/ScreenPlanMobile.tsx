@@ -1,23 +1,34 @@
 'use client';
 
 // Écran Plan (mobile), porté depuis design-system/components/ScreenPlanMobile/preview.html.
+import { useEffect, useState, type KeyboardEvent } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { B } from '@/lib/buildos';
 import { domains, getDomain, getStats, plan, project, tasks, tasksOf, type DomainId } from '@/lib/mock-data';
 import { routes } from '@/lib/routes';
+import { readDomainHash } from '@/lib/useHashTarget';
 import './ScreenPlanMobile.css';
 
-function DomainSection({ id, all }: { id: DomainId; all?: boolean }) {
+function DomainSection({ id, all, onCollapse }: { id: DomainId; all?: boolean; onCollapse: () => void }) {
   const router = useRouter();
   const d = getDomain(id);
   const st = getStats(id);
   const list = tasksOf(id);
   const open = all ? list : list.filter((t) => t.status !== 'done');
   const hidden = list.length - open.length;
+  function onKeyDown(e: KeyboardEvent<HTMLDivElement>) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      onCollapse();
+    }
+  }
   return (
-    <section className="dom">
-      <B.DomainHeader index={d.index} name={d.name} icon={d.icon} done={st.done} total={st.total} forgotten={st.forgottenOpen} compact />
+    <section className="dom" id={id}>
+      {/* DomainHeader n'accepte pas de clic : on l'enveloppe pour replier le domaine. */}
+      <div className="dom__toggle" role="button" tabIndex={0} aria-expanded="true" aria-label={`Replier ${d.name}`} onClick={onCollapse} onKeyDown={onKeyDown}>
+        <B.DomainHeader index={d.index} name={d.name} icon={d.icon} done={st.done} total={st.total} forgotten={st.forgottenOpen} compact />
+      </div>
       {open.map((t) => (
         <B.TaskCard
           key={t.id}
@@ -42,7 +53,30 @@ function DomainSection({ id, all }: { id: DomainId; all?: boolean }) {
 
 export default function ScreenPlanMobile() {
   const S = getStats();
-  const collapsed = domains.filter((d) => !plan.mobileOpenDomains.includes(d.id));
+  // Domaines dépliés : ceux du plan, plus celui désigné par l'ancre (/plan#finance).
+  const [openIds, setOpenIds] = useState<DomainId[]>(() => {
+    const target = readDomainHash();
+    return target && !plan.mobileOpenDomains.includes(target) ? [...plan.mobileOpenDomains, target] : plan.mobileOpenDomains;
+  });
+  const [scrollTarget, setScrollTarget] = useState<DomainId | null>(readDomainHash);
+
+  useEffect(() => {
+    if (!scrollTarget) return;
+    document.getElementById(scrollTarget)?.scrollIntoView({ block: 'start' });
+    setScrollTarget(null);
+  }, [scrollTarget]);
+
+  function expand(id: DomainId) {
+    setOpenIds((ids) => [...ids, id]);
+    setScrollTarget(id);
+  }
+  function collapse(id: DomainId) {
+    setOpenIds((ids) => ids.filter((x) => x !== id));
+  }
+
+  // Dépliés en haut dans l'ordre des domaines, repliés en lignes en dessous.
+  const opened = domains.filter((d) => openIds.includes(d.id));
+  const collapsed = domains.filter((d) => !openIds.includes(d.id));
   const firstForgotten = tasks.find((t) => t.forgotten && t.status !== 'done');
   return (
     <div className="s-plan-m">
@@ -77,20 +111,20 @@ export default function ScreenPlanMobile() {
         <p className="body-s"><strong>{S.forgottenOpen} étapes souvent oubliées</strong> restent ouvertes.</p>
         {firstForgotten ? <Link className="go ui" href={routes.task(firstForgotten.id)}>Voir</Link> : null}
       </div>
-      {plan.mobileOpenDomains.map((id) => (
-        <DomainSection key={id} id={id} all={plan.expandedDomains.includes(id)} />
+      {opened.map((d) => (
+        <DomainSection key={d.id} id={d.id} all={plan.expandedDomains.includes(d.id)} onCollapse={() => collapse(d.id)} />
       ))}
       <div className="collapsed">
         {collapsed.map((d) => {
           const st = getStats(d.id);
           return (
-            <div key={d.id} className="crow">
+            <button key={d.id} type="button" className="crow" aria-expanded="false" onClick={() => expand(d.id)}>
               <span className="n">{d.index}</span>
               <span className="title-s">{d.name}</span>
               {st.forgottenOpen ? <B.ForgottenBadge compact /> : <span />}
               <span className="c body-s">{st.done}/{st.total}</span>
               <B.Icon name="chevron-down" size={18} />
-            </div>
+            </button>
           );
         })}
       </div>

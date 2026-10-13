@@ -87,7 +87,7 @@ export default function ScreenHome() {
           <span className="label">Domaines<br />couverts par<br />votre plan</span>
         </div>
         {domains.map((d) => (
-          <div key={d.id} className="dom">
+          <Link key={d.id} className="dom" href={routes.domain(d.id)}>
             <B.Icon name={d.icon} size={24} />
             <span className="dom__n">{d.index}</span>
             <strong className="title-s">{d.name}</strong>
@@ -99,7 +99,7 @@ export default function ScreenHome() {
                 </span>
               ))}
             </span>
-          </div>
+          </Link>
         ))}
       </section>
     </div>

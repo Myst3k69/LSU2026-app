@@ -90,7 +90,7 @@ export default function ScreenDashboard() {
             {domains.map((d) => {
               const s = getStats(d.id);
               return (
-                <div key={d.id} className="drow">
+                <Link key={d.id} className="drow" href={routes.domain(d.id)}>
                   <span className="n">{d.index}</span>
                   <span className="name ui"><B.Icon name={d.icon} size={16} />{d.name}</span>
                   <B.ProgressBar value={s.done} max={s.total} size="sm" label={`Avancement ${d.name}`} />
@@ -100,7 +100,7 @@ export default function ScreenDashboard() {
                       <B.Icon name="alert" size={14} strokeWidth={2} />{s.forgottenOpen}
                     </span>
                   ) : <span />}
-                </div>
+                </Link>
               );
             })}
           </div>

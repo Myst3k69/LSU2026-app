@@ -11,7 +11,7 @@ npm run build
 | Route | Écran |
 | --- | --- |
 | `/` | Accueil (version mobile sous 768px) |
-| `/plan` | Plan de lancement (version mobile sous 768px) |
+| `/plan` | Plan de lancement (version mobile sous 768px) ; `/plan#juridique` cible un domaine |
 | `/tache/[id]` | Détail d'une tâche (`t1` à `t27` ; contenu maquetté pour `t10`) |
 | `/projet` | Tableau de bord |
 

@@ -1,0 +1,4 @@
+/* Ajout prototype : domaines de la barre latérale d'AppShell cliquables (vers leur section du plan). */
+.bo-side__domain { cursor: pointer; transition: background-color 150ms, color 150ms; }
+.bo-side__domain:hover { background: var(--paper); color: var(--ink); }
+.bo-side__domain:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }

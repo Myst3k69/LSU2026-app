@@ -38,3 +38,9 @@
 .s-plan-m .tab.on { color: var(--bleu); }
 /* Ajouts prototype : onglets et lien d'alerte navigables. */
 .s-plan-m .tab, .s-plan-m .alert .go { text-decoration: none; }
+/* Ajouts prototype : domaines dépliables (lignes repliées et en-têtes de domaine ouverts). */
+.s-plan-m .dom { scroll-margin-top: var(--space-6); }
+.s-plan-m .dom__toggle { cursor: pointer; border-radius: var(--radius-xs); }
+.s-plan-m .dom__toggle:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.s-plan-m button.crow { width: 100%; padding: 0; background: none; border: 0; border-bottom: 1px solid var(--line); font: inherit; text-align: left; cursor: pointer; }
+.s-plan-m button.crow:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }

@@ -1,6 +1,7 @@
 'use client';
 
 // Écran Accueil (mobile), porté depuis design-system/components/ScreenHomeMobile/preview.html.
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { B } from '@/lib/buildos';
 import { completeness, domains, project, tasksOf } from '@/lib/mock-data';
@@ -58,9 +59,11 @@ export default function ScreenHomeMobile() {
         <ul className="body-s">
           {domains.map((d) => (
             <li key={d.id}>
-              <span className="n">{d.index}</span>
-              <span>{d.name}</span>
-              {tasksOf(d.id).some((t) => t.forgotten) ? <B.ForgottenBadge compact className="f" /> : null}
+              <Link href={routes.domain(d.id)}>
+                <span className="n">{d.index}</span>
+                <span>{d.name}</span>
+                {tasksOf(d.id).some((t) => t.forgotten) ? <B.ForgottenBadge compact className="f" /> : null}
+              </Link>
             </li>
           ))}
         </ul>

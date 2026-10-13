@@ -6,6 +6,7 @@ import { B } from '@/lib/buildos';
 import { Shell } from '@/components/Shell';
 import { domains, getStats, plan, project, tasks, tasksOf, type Domain } from '@/lib/mock-data';
 import { routes } from '@/lib/routes';
+import { useScrollToDomainHash } from '@/lib/useHashTarget';
 import './ScreenPlan.css';
 
 function plural(n: number, word: string) {
@@ -19,7 +20,7 @@ function DomainSection({ d }: { d: Domain }) {
   const open = plan.expandedDomains.includes(d.id) ? list : list.filter((t) => t.status !== 'done');
   const hidden = list.length - open.length;
   return (
-    <section className="dom">
+    <section className="dom" id={d.id}>
       <B.DomainHeader index={d.index} name={d.name} icon={d.icon} done={st.done} total={st.total} forgotten={st.forgottenOpen} />
       {open.map((t) => (
         <B.TaskCard
@@ -48,6 +49,7 @@ export default function ScreenPlan() {
   const router = useRouter();
   const S = getStats();
   const firstForgotten = tasks.find((t) => t.forgotten && t.status !== 'done');
+  useScrollToDomainHash();
   return (
     <div className="s-plan">
       <B.PrototypeBanner />
