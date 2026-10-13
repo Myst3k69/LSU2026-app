@@ -1,0 +1,7 @@
+node_modules/
+.next/
+out/
+next-env.d.ts
+*.tsbuildinfo
+# Généré depuis ../design-system/tokens.json par scripts/build-tokens.mjs
+styles/tokens.css

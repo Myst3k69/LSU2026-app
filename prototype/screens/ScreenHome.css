@@ -1,0 +1,39 @@
+/* Styles de l'écran ScreenHome, repris de design-system/components/ScreenHome/preview.html.
+   Sélecteurs préfixés par .s-home pour ne pas fuir vers les autres écrans. */
+.s-home { position: relative; width: 100%; min-width: 1440px; height: 960px; overflow: hidden; background: var(--paper); }
+.s-home .nav { display: flex; align-items: center; gap: var(--space-5); height: 88px; padding: 0 var(--space-8); }
+.s-home .nav__sep { width: 1px; height: 32px; background: var(--ink); opacity: .5; }
+.s-home .nav__tag { color: var(--ink-3); line-height: 15px; }
+.s-home .nav__links { display: flex; gap: var(--space-6); margin-left: auto; color: var(--ink); }
+.s-home .nav__links a { color: inherit; text-decoration: none; }
+.s-home .nav__right { display: flex; align-items: center; gap: var(--space-4); margin-left: var(--space-7); }
+.s-home .nav__user { display: grid; place-items: center; width: 40px; height: 40px; border-radius: var(--radius-full); background: var(--ink); color: var(--surface); font-weight: 700; font-size: 13px; }
+.s-home .hero { position: relative; display: grid; grid-template-columns: 640px 1fr; gap: var(--space-8); padding: var(--space-7) var(--space-8) 0; height: 600px; }
+.s-home .kick { display: flex; align-items: flex-start; gap: var(--space-4); margin-bottom: var(--space-5); color: var(--ink-3); }
+.s-home .kick__line { width: 40px; height: 1.5px; background: var(--ink); margin-top: 7px; }
+.s-home .hero h1 { color: var(--ink); }
+.s-home .hero h1 em { font-style: normal; color: var(--bleu); }
+.s-home .hero .lead { margin-top: var(--space-6); max-width: 540px; color: var(--ink-2); }
+.s-home .proof { display: flex; align-items: center; gap: var(--space-4); margin-top: var(--space-6); padding-top: var(--space-5); border-top: 1px solid var(--line); max-width: 540px; }
+.s-home .proof__q { color: var(--ink-2); }
+.s-home .right { position: relative; z-index: 1; padding-top: var(--space-2); }
+.s-home .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); box-shadow: var(--shadow-frame); padding: var(--space-5); }
+.s-home .card__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-4); }
+.s-home .card__head .label { color: var(--ink-3); }
+.s-home .chips { display: flex; flex-wrap: wrap; gap: var(--space-2); flex: 1; }
+.s-home .chip { display: inline-flex; align-items: center; gap: 4px; height: 28px; padding: 0 10px; border-radius: var(--radius-xs); background: var(--paper); color: var(--ink-2); font-size: 13px; font-weight: 600; box-shadow: inset 0 0 0 1px var(--line); }
+.s-home .chip.on { background: var(--bleu-soft); color: var(--bleu); box-shadow: none; }
+.s-home .card__go { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); margin-top: var(--space-5); }
+.s-home .card__go .body-s { color: var(--ink-3); max-width: 300px; }
+.s-home .try { margin-top: var(--space-5); display: flex; gap: var(--space-3); align-items: baseline; color: var(--ink-2); }
+.s-home .try .label { color: var(--ink-3); flex: none; }
+.s-home .disc { position: absolute; border-radius: var(--radius-full); background: var(--bleu); }
+.s-home .disc--a { width: 320px; height: 320px; right: -168px; top: 236px; }
+.s-home .band { position: absolute; left: 0; right: 0; bottom: 0; height: 224px; display: grid; grid-template-columns: 248px repeat(8, 1fr); border-top: 1.5px solid var(--ink); background: var(--paper); }
+.s-home .band__intro { padding: var(--space-5) var(--space-5) 0 var(--space-8); display: flex; flex-direction: column; gap: var(--space-3); }
+.s-home .band__intro .label { color: var(--ink-3); line-height: 16px; }
+.s-home .dom { padding: var(--space-5) var(--space-4) 0; border-left: 1px solid var(--line); display: flex; flex-direction: column; gap: var(--space-2); }
+.s-home .dom .bo-icon { color: var(--ink); margin-bottom: var(--space-2); }
+.s-home .dom__n { font-family: var(--font-serif); font-weight: 600; font-size: 15px; color: var(--ink-3); }
+.s-home .dom__ex { color: var(--ink-3); }
+.s-home .dom__ex b { color: var(--orange-ink); font-weight: 600; }

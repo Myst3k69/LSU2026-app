@@ -1,0 +1,32 @@
+/* Styles de l'écran ScreenPlan, repris de design-system/components/ScreenPlan/preview.html.
+   Sélecteurs préfixés par .s-plan pour ne pas fuir vers les autres écrans. */
+.s-plan { width: 100%; min-width: 1440px; background: var(--paper); }
+.s-plan .head { display: grid; grid-template-columns: 1fr auto; gap: var(--space-7); align-items: end; padding-bottom: var(--space-6); }
+.s-plan .head .label { color: var(--ink-3); display: block; margin-bottom: var(--space-3); }
+.s-plan .head p { margin-top: var(--space-3); max-width: 600px; color: var(--ink-2); }
+.s-plan .stats { display: flex; }
+.s-plan .stat { display: flex; flex-direction: column; gap: 6px; padding: 0 var(--space-5); border-left: 1px solid var(--line); }
+.s-plan .stat:first-child { border-left: 0; }
+.s-plan .stat b { font-size: 32px; line-height: 1; font-weight: 800; letter-spacing: -0.03em; }
+.s-plan .stat .label { color: var(--ink-3); margin: 0; }
+.s-plan .stat--forgot b { color: var(--orange-ink); }
+.s-plan .stat--done b { color: var(--vert); }
+.s-plan .global { display: grid; grid-template-columns: auto 1fr; gap: var(--space-4); align-items: center; padding-bottom: var(--space-5); }
+.s-plan .global .ui { color: var(--ink); }
+.s-plan .bar { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3) 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.s-plan .tabs { display: flex; gap: 2px; padding: 3px; background: var(--paper-deep); border-radius: var(--radius-sm); }
+.s-plan .tab { display: inline-flex; align-items: center; gap: var(--space-2); height: 34px; padding: 0 var(--space-3); border-radius: 6px; color: var(--ink-2); }
+.s-plan .tab span { color: var(--ink-3); font-weight: 500; }
+.s-plan .tab.on { background: var(--surface); color: var(--ink); box-shadow: var(--shadow-card); }
+.s-plan .tab--forgot { color: var(--orange-ink); }
+.s-plan .bar__right { margin-left: auto; display: flex; align-items: center; gap: var(--space-2); color: var(--ink-3); }
+.s-plan .alert { display: grid; grid-template-columns: auto 1fr auto; gap: var(--space-4); align-items: center; margin: var(--space-5) 0 var(--space-7); padding: var(--space-4) var(--space-5); background: var(--orange-soft); border-radius: var(--radius-md); }
+.s-plan .alert__ic { display: grid; place-items: center; width: 40px; height: 40px; border-radius: var(--radius-full); background: var(--surface); color: var(--orange); }
+.s-plan .alert strong { display: block; color: var(--ink); }
+.s-plan .alert p { color: var(--ink-2); }
+.s-plan .grid { display: grid; grid-template-columns: 1fr 1fr; column-gap: var(--space-7); row-gap: var(--space-7); align-items: start; }
+.s-plan .dom { display: flex; flex-direction: column; gap: var(--space-3); }
+.s-plan .dom .bo-domain { margin-bottom: var(--space-2); }
+.s-plan .more { display: flex; align-items: center; gap: var(--space-2); height: 40px; padding: 0 var(--space-4); border: 1px dashed var(--line-control); border-radius: var(--radius-md); color: var(--ink-3); background: transparent; }
+.s-plan .more .bo-icon { color: var(--vert); }
+.s-plan .add { display: flex; align-items: center; gap: var(--space-2); color: var(--ink-3); padding: var(--space-1) var(--space-4); }

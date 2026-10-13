@@ -1,0 +1,40 @@
+/* Styles de l'écran ScreenPlanMobile, repris de design-system/components/ScreenPlanMobile/preview.html.
+   Sélecteurs préfixés par .s-plan-m pour ne pas fuir vers les autres écrans. */
+.s-plan-m { position: relative; width: 100%; background: var(--paper); padding-bottom: 84px; }
+.s-plan-m .bo-proto { gap: var(--space-2); padding: 0 var(--space-3); }
+.s-plan-m .bo-proto .label { letter-spacing: 0.1em; font-size: 10px; }
+.s-plan-m .bar { display: flex; align-items: center; gap: var(--space-3); height: 60px; padding: 0 var(--space-4); border-bottom: 1px solid var(--line); }
+.s-plan-m .bar__p { display: flex; flex-direction: column; flex: 1; }
+.s-plan-m .bar__p .label { color: var(--ink-3); font-size: 10px; }
+.s-plan-m .icbtn { display: grid; place-items: center; width: 40px; height: 40px; border-radius: var(--radius-xs); color: var(--ink); background: transparent; border: 0; }
+.s-plan-m .head { padding: var(--space-5) var(--space-4) var(--space-4); }
+.s-plan-m .head .label { display: block; color: var(--ink-3); margin-bottom: var(--space-2); }
+.s-plan-m .prog { display: flex; align-items: center; gap: var(--space-3); margin-top: var(--space-4); }
+.s-plan-m .prog .bo-progress { flex: 1; }
+.s-plan-m .prog b { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; }
+.s-plan-m .prog .body-s { color: var(--ink-3); }
+.s-plan-m .chips { display: flex; gap: var(--space-2); padding: 0 var(--space-4) var(--space-4); overflow-x: auto; white-space: nowrap; }
+.s-plan-m .chip { flex: none; display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 var(--space-3); border-radius: var(--radius-xs); background: var(--surface); color: var(--ink-2); box-shadow: inset 0 0 0 1px var(--line-control); }
+.s-plan-m .chip span { color: var(--ink-3); font-weight: 500; }
+.s-plan-m .chip.on { background: var(--ink); color: var(--surface); box-shadow: none; }
+.s-plan-m .chip.on span { color: var(--paper-deep); }
+.s-plan-m .chip.f { color: var(--orange-ink); }
+.s-plan-m .alert { display: flex; gap: var(--space-3); align-items: center; margin: 0 var(--space-4) var(--space-6); padding: var(--space-3) var(--space-4); background: var(--orange-soft); border-radius: var(--radius-md); }
+.s-plan-m .alert .bo-icon { color: var(--orange-ink); flex: none; }
+.s-plan-m .alert p { flex: 1; color: var(--ink); }
+.s-plan-m .alert .go { color: var(--orange-ink); }
+.s-plan-m .dom { padding: 0 var(--space-4); display: flex; flex-direction: column; gap: var(--space-2); margin-bottom: var(--space-6); }
+.s-plan-m .dom .bo-domain { margin-bottom: var(--space-2); }
+.s-plan-m .dom .bo-task { grid-template-columns: 22px 1fr 16px; gap: 10px; }
+.s-plan-m .more { display: flex; align-items: center; gap: var(--space-2); height: 40px; padding: 0 var(--space-3); border: 1px dashed var(--line-control); border-radius: var(--radius-md); color: var(--ink-3); }
+.s-plan-m .more .bo-icon:first-child { color: var(--vert); }
+.s-plan-m .collapsed { margin: 0 var(--space-4); border-top: 1.5px solid var(--ink); }
+.s-plan-m .crow { display: grid; grid-template-columns: 40px 1fr auto auto 20px; gap: var(--space-2); align-items: center; height: 56px; border-bottom: 1px solid var(--line); color: var(--ink); }
+.s-plan-m .crow .n { font-family: var(--font-serif); font-weight: 600; font-size: 22px; }
+.s-plan-m .crow .c { color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.s-plan-m .crow .bo-icon:last-child { color: var(--ink-3); }
+.s-plan-m .tabbar { position: fixed; left: 0; right: 0; bottom: 0; height: 76px; display: grid; grid-template-columns: repeat(4, 1fr); padding: var(--space-2) var(--space-2) var(--space-4); background: var(--surface); border-top: 1px solid var(--line); }
+.s-plan-m .tab { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--ink-3); font-size: 11px; font-weight: 600; }
+.s-plan-m .tab.on { color: var(--bleu); }
+/* Ajouts prototype : onglets et lien d'alerte navigables. */
+.s-plan-m .tab, .s-plan-m .alert .go { text-decoration: none; }

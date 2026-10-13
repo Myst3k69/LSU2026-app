@@ -1,0 +1,31 @@
+/* Styles de l'écran ScreenHomeMobile, repris de design-system/components/ScreenHomeMobile/preview.html.
+   Sélecteurs préfixés par .s-home-m pour ne pas fuir vers les autres écrans. */
+.s-home-m { position: relative; width: 100%; background: var(--paper); overflow: hidden; }
+.s-home-m .bo-proto { gap: var(--space-2); padding: 0 var(--space-3); }
+.s-home-m .bo-proto .label { letter-spacing: 0.1em; font-size: 10px; }
+.s-home-m .bar { display: flex; align-items: center; justify-content: space-between; height: 64px; padding: 0 var(--space-4); }
+.s-home-m .bar__r { display: flex; align-items: center; gap: var(--space-3); }
+.s-home-m .icbtn { display: grid; place-items: center; width: 40px; height: 40px; border-radius: var(--radius-xs); border: 1.5px solid var(--line-control); color: var(--ink); background: transparent; }
+.s-home-m .user { display: grid; place-items: center; width: 36px; height: 36px; border-radius: var(--radius-full); background: var(--ink); color: var(--surface); font-weight: 700; font-size: 12px; }
+.s-home-m .hero { position: relative; padding: var(--space-5) var(--space-4) 0; }
+.s-home-m .kick { display: flex; align-items: center; gap: var(--space-3); color: var(--ink-3); margin-bottom: var(--space-4); }
+.s-home-m .kick i { width: 28px; height: 1.5px; background: var(--ink); }
+.s-home-m h1 { font-size: 48px; position: relative; z-index: 1; }
+.s-home-m h1 em { font-style: normal; color: var(--bleu); }
+.s-home-m .lead { margin-top: var(--space-4); color: var(--ink-2); font-size: 16px; line-height: 24px; position: relative; z-index: 1; }
+.s-home-m .disc { position: absolute; width: 160px; height: 160px; border-radius: var(--radius-full); background: var(--bleu); right: -110px; top: 0; }
+.s-home-m .form { padding: var(--space-5) var(--space-4) 0; display: flex; flex-direction: column; gap: var(--space-3); }
+.s-home-m .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.s-home-m .chip { display: inline-flex; align-items: center; gap: 4px; height: 28px; padding: 0 10px; border-radius: var(--radius-xs); background: var(--paper); color: var(--ink-2); font-size: 13px; font-weight: 600; box-shadow: inset 0 0 0 1px var(--line); }
+.s-home-m .chip.on { background: var(--bleu-soft); color: var(--bleu); box-shadow: none; }
+.s-home-m .note { color: var(--ink-3); text-align: center; }
+.s-home-m .doms { margin: var(--space-6) var(--space-4) var(--space-6); border-top: 1.5px solid var(--ink); }
+.s-home-m .doms__h { display: flex; align-items: baseline; gap: var(--space-3); padding: var(--space-4) 0 var(--space-3); }
+.s-home-m .doms__h .label { color: var(--ink-3); line-height: 15px; }
+.s-home-m .doms ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; }
+.s-home-m .doms li { display: flex; align-items: center; gap: var(--space-2); padding: 10px 0; border-top: 1px solid var(--line); color: var(--ink); }
+.s-home-m .doms li:nth-child(odd) { padding-right: var(--space-2); }
+.s-home-m .doms li:nth-child(even) { padding-left: var(--space-3); border-left: 1px solid var(--line); }
+.s-home-m .doms .n { font-family: var(--font-serif); font-weight: 600; color: var(--ink-3); width: 20px; }
+.s-home-m .doms .f { margin-left: auto; }
+.s-home-m .legend { display: flex; align-items: center; gap: var(--space-2); padding-top: var(--space-3); border-top: 1px solid var(--line); color: var(--ink-3); }
